@@ -29,12 +29,15 @@
         </v-navigation-drawer>
         <v-navigation-drawer v-model="left" fixed temporary />
         <div class="mainScreen">
-            <div class="moneyState">moneyState</div>
-            <div class="calendar">calendar</div>
-            <div class="moneyDetail">moneyDetail</div>
-            <v-btn class="plus_icon mx-2" fab dark color="indigo">
-                <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
+            <div class="moneyState">
+                <moneyState></moneyState>
+            </div>
+            <div class="calendar">
+                <calendar></calendar>
+            </div>
+            <div class="moneyDetail">
+                <moneyDetail></moneyDetail>
+            </div>
         </div>
         <v-bottom-navigation :value="activeBtn" grow color="blue" app>
             <v-btn>
@@ -57,6 +60,9 @@
     </v-app>
 </template>
 <script>
+import calendar from "./calendar/calendar.vue"
+import moneyDetail from "./moneyDetail/moneyDetail.vue"
+import moneyState from "./moneyState/moneyState.vue"
 export default {
     props: {
         source: String,
@@ -65,34 +71,32 @@ export default {
         drawer: null,
         left: false
     }),
+    components: {
+        'calendar': calendar,
+        'moneyDetail' : moneyDetail,
+        'moneyState': moneyState
+    }
 }
 </script>
 <style>
-.mainScreen {
-    position: fixed;
-    width: 375px;
-    height: 555px;
+.mainScreen{
+    width: 100%;
+    height: 85%;
 }
-
 
 .moneyState {
     border: 1px solid grey;
-    height: 80px;
+    height: 15%;
 }
 
 .calendar {
     border: 1px solid grey;
-    height: 280px;
+    height:50%;
 }
 
 .moneyDetail {
     border: 1px solid grey;
-    height: 195px;
+    height: 32%;
 }
 
-.plus_icon {
-    position: relative;
-    bottom: 60px;
-    left: 300px;
-}
 </style>

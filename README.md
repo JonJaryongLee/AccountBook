@@ -37,3 +37,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### 메인페이지 대충 만들어놓음
 #### 화면을 상단바, moneyState, calendar, moneyDetail, footer로 나눔
 #### 내 폰에서 + 버튼 안보임... 추후 수정할 것
+#### 화면 레이아웃 %로 수정
