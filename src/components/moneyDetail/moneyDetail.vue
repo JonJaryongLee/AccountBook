@@ -11,7 +11,7 @@
 <style>
 .plusBtnContainer {
     position: fixed;
-    top:80%;
+    top:75%;
     left:78%;
 }
 </style>
