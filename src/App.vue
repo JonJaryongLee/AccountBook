@@ -1,23 +1,24 @@
 <template>
-  <v-app>
-    <v-content>
-      <Main/>
-    </v-content>
-  </v-app>
+    <v-app>
+        <v-content>
+            <Main />
+        </v-content>
+    </v-app>
 </template>
-
 <script>
 import Main from './components/Main';
 
 export default {
-  name: 'App',
+    name: 'App',
 
-  components: {
-    Main,
-  },
-
-  data: () => ({
-    //
-  }),
+    components: {
+        Main,
+    },
+    data: () => ({
+        //
+    }),
 };
 </script>
+<style>
+
+</style>
