@@ -91,12 +91,12 @@ export default {
 
 .calendar {
     border: 1px solid grey;
-    height:40%;
+    height:50%;
 }
 
 .moneyDetail {
     border: 1px solid grey;
-    height: 30%;
+    height: 52%;
 }
 
 </style>
