@@ -16,7 +16,7 @@
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
             <!-- 툴바엔 몇 월이 들어갈지 나옴 -->
             <v-toolbar-title class="month">
-                dd
+                4월
             </v-toolbar-title>
             <v-spacer />
             <v-app-bar-nav-icon @click.stop="drawerRight = !drawerRight" />
@@ -40,12 +40,30 @@
                     <!-- 한가운데 -->
                     한가운데
                 </v-row>
+                <v-btn class="plus_icon mx-2" fab dark color="indigo">
+                    <v-icon dark>mdi-plus</v-icon>
+                </v-btn>
             </v-container>
         </v-content>
         <v-navigation-drawer v-model="right" fixed right temporary />
-        <v-footer app>
-            <span>footer</span>
-        </v-footer>
+        <v-bottom-navigation :value="activeBtn" grow color="teal" app>
+            <v-btn>
+                <span>전체</span>
+                <v-icon>mdi-calendar-month-outline</v-icon>
+            </v-btn>
+            <v-btn>
+                <span>수입</span>
+                <v-icon>mdi-purse-outline</v-icon>
+            </v-btn>
+            <v-btn>
+                <span>지출</span>
+                <v-icon>mdi-credit-card-outline</v-icon>
+            </v-btn>
+            <v-btn>
+                <span>설정</span>
+                <v-icon>mdi-cog-outline</v-icon>
+            </v-btn>
+        </v-bottom-navigation>
     </v-app>
 </template>
 <script>
@@ -67,7 +85,9 @@ export default {
     left: 80px;
 }
 
-.footer {
-    border: 1px solid black;
+.plus_icon {
+    position: relative;
+    left: 270px;
+    top: 50px;
 }
 </style>
