@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <v-app-bar app clipped-right color="teal lighten-2">
+        <v-app-bar height="40%" app clipped-right color="teal lighten-2">
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
             <v-spacer></v-spacer>
             <!-- 툴바엔 몇 월이 들어갈지 나옴 -->
@@ -39,7 +39,7 @@
                 <moneyDetail></moneyDetail>
             </div>
         </div>
-        <v-bottom-navigation :value="activeBtn" grow color="blue" app>
+        <v-bottom-navigation grow color="blue" app>
             <v-btn>
                 <span>전체</span>
                 <v-icon>mdi-calendar-month-outline</v-icon>
@@ -91,12 +91,12 @@ export default {
 
 .calendar {
     border: 1px solid grey;
-    height:52%;
+    height:54%;
 }
 
 .moneyDetail {
     border: 1px solid grey;
-    height: 50%;
+    height: 48%;
 }
 
 </style>

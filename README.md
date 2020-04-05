@@ -38,3 +38,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### 화면을 상단바, moneyState, calendar, moneyDetail, footer로 나눔
 #### 화면 레이아웃 %로 수정
 #### moneyState 레이아웃 1차완성
+
+### 4월 4일
+#### moneyDetail 아이콘빼고 레이아웃 작업 1차완료

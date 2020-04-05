@@ -51,8 +51,8 @@
 <style>
 .moneyStateBox {
     display: flex;
-    height: 100%;
     padding-top: 3px;
+    height:70px;
 }
 
 .incomeAndBalanceBox,
