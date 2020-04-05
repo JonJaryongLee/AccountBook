@@ -1,7 +1,7 @@
 <template>
     <v-app id="inspire">
         <v-app-bar height="40%" app clipped-right color="teal lighten-2">
-            <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+            <v-app-bar-nav-icon color="white" @click.stop="drawer = !drawer" />
             <v-spacer></v-spacer>
             <!-- 툴바엔 몇 월이 들어갈지 나옴 -->
             <v-toolbar-title class="month">
@@ -9,10 +9,10 @@
             </v-toolbar-title>
             <v-spacer />
             <v-btn icon>
-                <v-icon>mdi-magnify</v-icon>
+                <v-icon color="white">mdi-magnify</v-icon>
             </v-btn>
             <v-btn icon>
-                <v-icon>mdi-tune</v-icon>
+                <v-icon color="white">mdi-tune</v-icon>
             </v-btn>
         </v-app-bar>
         <v-navigation-drawer v-model="drawer" app>
@@ -84,19 +84,8 @@ export default {
     height: 85%;
 }
 
-.moneyState {
-    border: 1px solid grey;
-    height: 15%;
-}
-
-.calendar {
-    border: 1px solid grey;
-    height:54%;
-}
-
 .moneyDetail {
-    border: 1px solid grey;
-    height: 48%;
+    padding-bottom: 2%;
 }
 
 </style>

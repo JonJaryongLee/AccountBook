@@ -11,7 +11,7 @@
             </div>
             <div class="balanceBox">
                 <div class="balanceTag body-1">
-                    잔액
+                    현금 잔액
                 </div>
                 <div class="balanceNum subtitle-1">
                     581,300원
