@@ -39,5 +39,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### 화면 레이아웃 %로 수정
 #### moneyState 레이아웃 1차완성
 
-### 4월 4일
+### 4월 5일
 #### moneyDetail 아이콘빼고 레이아웃 작업 1차완료
