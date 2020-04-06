@@ -81,7 +81,6 @@ export default {
 <style>
 .mainScreen{
     width: 100%;
-    height: 85%;
 }
 
 .moneyDetail {
