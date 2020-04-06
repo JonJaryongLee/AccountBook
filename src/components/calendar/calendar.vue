@@ -81,6 +81,11 @@ export default {
                 this.dateExpenseDetailNumArray[index - 1] = this.spendContent[index][1];
         }
     },
+    mounted(){
+        //일요일 빨간색, 토요일 파란색
+        this.$refs.calendarColumn[0].style.color="red";
+        this.$refs.calendarColumn[6].style.color="blue";
+    }
 
 }
 </script>

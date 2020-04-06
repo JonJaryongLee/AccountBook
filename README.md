@@ -44,5 +44,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### 달력 구현중
 
 ### 4월 6일
-#### 하루종일 달력 제작함. 일요일 빨간색, 토요일 파란색 적용 빼고 완료
-#### UI메인부분에서 남은 건, 달력 남은것하고 아이콘정도.
+#### 메인부 UI 1차 완성
