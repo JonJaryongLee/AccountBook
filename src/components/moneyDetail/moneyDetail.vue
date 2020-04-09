@@ -8,7 +8,7 @@
                 {{moneyDetail.moneyDetailTagData[moneyDetailIndex-1]}}
             </div>
             <div class="moneyDetailContent body-2">{{moneyDetail.moneyDetailContentData[moneyDetailIndex-1]}}</div>
-            <div class="moneyDetailMoney subtitle-1">{{moneyDetail.moneyDetailMoneyData[moneyDetailIndex-1]}}</div>
+            <div class="moneyDetailMoney subtitle-1" ref="moneyDetailMoney">{{moneyDetailMoneyDataComma[moneyDetailIndex-1][0]}}원</div>
         </div>
         <div class="plusBtnContainer">
             <v-btn class="plus_icon mx-2" fab dark color="indigo">
@@ -21,11 +21,31 @@
 export default {
     props: ['moneyDetail'],
     data: () => ({
-
+        moneyDetailMoneyDataComma: []
     }),
+    created(){
+        // 정수형으로 들어온 돈에 콤마를 붙여줌
+        this.moneyDetailMoneyDataComma = this.moneyDetail.moneyDetailMoneyData;
+        for(let i=0;i<this.moneyDetailMoneyDataComma.length;i++){
+            this.moneyDetailMoneyDataComma[i][0] = this.numberWithCommas(this.moneyDetailMoneyDataComma[i][0]);
+        }
+    },
     mounted(){
         for(let i=0;i<this.moneyDetail.moneyDetailsNum;i++){
             this.$refs.iconContainerInMoneyDetailItemContainer[i].style.backgroundColor = this.moneyDetail.iconColor[i];
+        }
+
+        // 만약 수입이라면 파란색으로
+        for(let i=0;i<this.moneyDetailMoneyDataComma.length;i++){
+            if(this.moneyDetailMoneyDataComma[i][1]=="+"){
+                this.$refs.moneyDetailMoney[i].style.color = "blue";
+            }
+        }
+    },
+    methods:{
+        // 정수형으로 들어온 돈에 콤마를 붙여줌
+        numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     }
 }

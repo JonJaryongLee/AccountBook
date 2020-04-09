@@ -46,12 +46,13 @@ export default {
             null, null, null, null, null,
             null, null, null, null, null,
             null, null, null, null, null, null
-        ]
+        ],
+        sepndContentWithComma: {}
     }),
     created() {
 
         // 캘린더에 날짜 집어넣기
-        let cal, m;
+        let cal, m, index;
         cal = new calendar.Calendar();
         m = cal.monthDays(this.monthData.thisYear, this.monthData.thisMonth - 1, function(d) { return (d.getDate()) });
         for (let i = 0; i < m.length; i++) {
@@ -59,13 +60,20 @@ export default {
         }
         this.rows = this.dateOfThisMonth.length;
 
+        //정수형으로 들어온 돈에 콤마 붙이기
+        this.sepndContentWithComma = this.monthData.spendContent;
+        for(let i=0;i<Object.keys(this.sepndContentWithComma).length; i++) {
+            index = Object.keys(this.sepndContentWithComma)[i];
+            this.sepndContentWithComma[index][0] = this.numberWithCommas(this.sepndContentWithComma[index][0]);
+        }
+
         //spendContent 나누기
-        for (let i = 0; i < Object.keys(this.monthData.spendContent).length; i++) {
-            let index = Object.keys(this.monthData.spendContent)[i];
-            if (this.monthData.spendContent[index][0] == "+") {
-                this.dateIncomeDetailNumArray[index - 1] = this.monthData.spendContent[index][1];
+        for (let i = 0; i < Object.keys(this.sepndContentWithComma).length; i++) {
+            index = Object.keys(this.sepndContentWithComma)[i];
+            if (this.sepndContentWithComma[index][1] == "+") {
+                this.dateIncomeDetailNumArray[index - 1] = this.sepndContentWithComma[index][0];
             } else
-                this.dateExpenseDetailNumArray[index - 1] = this.monthData.spendContent[index][1];
+                this.dateExpenseDetailNumArray[index - 1] = this.sepndContentWithComma[index][0];
         }
     },
     mounted(){
@@ -84,6 +92,10 @@ export default {
                 //그걸 Main으로 넘겨줌
                 //this.$emit('printMoneyDetail',moneyDetail);
             }
+        },
+        // 정수형으로 들어온 돈에 콤마를 붙여줌
+        numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     }
 }
