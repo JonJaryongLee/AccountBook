@@ -45,3 +45,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 4월 6일
 #### 메인부 UI 1차 완성
+
+### 4월 9일
+#### Login화면 구현. App.vue의 하위 컴포넌트라서 그런지 css적용이 꽉 차게 안되서 아쉬움. 그래도 그렇게 안 이쁜건 아니라서 그대로 둘 예정

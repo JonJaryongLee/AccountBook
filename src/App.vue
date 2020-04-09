@@ -6,7 +6,7 @@
     </v-app>
 </template>
 <script>
-import Main from './components/Main';
+import Main from './components/login/login.vue';
 
 export default {
     name: 'App',
