@@ -3,7 +3,12 @@
         <div class="calendarContainer">
             <div class="calendarColumn" ref="calendarColumn" v-for="column in 7" :key="column">
                 <div class="calendarTag">{{daysTag[column-1]}}</div>
-                <div class="calendarItem" ref="calendarItem" v-for="row in rows" :key="row">
+                <div 
+                    class="calendarItem" 
+                    ref="calendarItem" 
+                    v-for="row in rows" 
+                    :key="row" 
+                    @click="printMoneyDetail(row,column)">
                     <div class="dateNum" v-if="dateOfThisMonth[row-1][column-1]">
                         {{dateOfThisMonth[row-1][column-1]}}
                     </div>
@@ -21,29 +26,11 @@
 <script>
 import calendar from 'calendar'
 export default {
+    props: ['monthData'],
     data: () => ({
         daysTag: ["일", "월", "화", "수", "목", "금", "토"],
         rows: 6,
-        thisYear: 2020,
-        thisMonth: 4,
         dateOfThisMonth: [],
-        spendContent: {
-            1: ["+", "2,000,000"],
-            3: ["-", "7,900"],
-            5: ["-", "400,000"],
-            7: ["-", "56,800"],
-            8: ["-", "6,000"],
-            9: ["-", "25,000"],
-            10: ["-", "500,000"],
-            12: ["-", "36,700"],
-            13: ["-", "259,200"],
-            14: ["-", "10,500"],
-            15: ["-", "53,600"],
-            16: ["-", "10,200"],
-            17: ["-", "5,000"],
-            20: ["-", "12,800"],
-            21: ["-", "35,000"]
-        },
         dateIncomeDetailNumArray: [
             null, null, null, null, null,
             null, null, null, null, null,
@@ -66,27 +53,39 @@ export default {
         // 캘린더에 날짜 집어넣기
         let cal, m;
         cal = new calendar.Calendar();
-        m = cal.monthDays(this.thisYear, this.thisMonth - 1, function(d) { return (d.getDate()) });
+        m = cal.monthDays(this.monthData.thisYear, this.monthData.thisMonth - 1, function(d) { return (d.getDate()) });
         for (let i = 0; i < m.length; i++) {
             this.dateOfThisMonth.push(m[i]);
         }
         this.rows = this.dateOfThisMonth.length;
 
         //spendContent 나누기
-        for (let i = 0; i < Object.keys(this.spendContent).length; i++) {
-            let index = Object.keys(this.spendContent)[i];
-            if (this.spendContent[index][0] == "+") {
-                this.dateIncomeDetailNumArray[index - 1] = this.spendContent[index][1];
+        for (let i = 0; i < Object.keys(this.monthData.spendContent).length; i++) {
+            let index = Object.keys(this.monthData.spendContent)[i];
+            if (this.monthData.spendContent[index][0] == "+") {
+                this.dateIncomeDetailNumArray[index - 1] = this.monthData.spendContent[index][1];
             } else
-                this.dateExpenseDetailNumArray[index - 1] = this.spendContent[index][1];
+                this.dateExpenseDetailNumArray[index - 1] = this.monthData.spendContent[index][1];
         }
     },
     mounted(){
         //일요일 빨간색, 토요일 파란색
         this.$refs.calendarColumn[0].style.color="red";
         this.$refs.calendarColumn[6].style.color="blue";
+    },
+    methods:{
+        printMoneyDetail(row,column){
+            let date = this.dateOfThisMonth[row-1][column-1];
+            if(date==0)
+                return;
+            else{
+                //axios통신으로 this.monthDate.thisYear, this.monthDate.thisMonth, date 넘겨주고
+                //해당 날짜의 moneyDetail정보를 받아옴
+                //그걸 Main으로 넘겨줌
+                //this.$emit('printMoneyDetail',moneyDetail);
+            }
+        }
     }
-
 }
 </script>
 <style>

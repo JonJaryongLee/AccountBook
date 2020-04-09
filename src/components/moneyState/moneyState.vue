@@ -6,7 +6,7 @@
                     수입
                 </div>
                 <div class="incomeNum subtitle-1">
-                    2,000,000원
+                    {{incomeWithComma}}원
                 </div>
             </div>
             <div class="balanceBox">
@@ -14,7 +14,7 @@
                     현금 잔액
                 </div>
                 <div class="balanceNum subtitle-1">
-                    581,300원
+                    {{balanceWithComma}}원
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
                     지출
                 </div>
                 <div class="expenseNum subtitle-1">
-                    1,418,700원
+                    {{expenseWithComma}}원
                 </div>
             </div>
             <div class="typeOfExpenseBox caption">
@@ -33,7 +33,7 @@
                         현금
                     </div>
                     <div class="expenseTypeCashNum">
-                        1,418,700
+                        {{expenseTypeCashWithComma}}
                     </div>
                 </div>
                 <div class="expenseTypeCardBox">
@@ -41,13 +41,40 @@
                         카드
                     </div>
                     <div class="expenseTypeCardNum">
-                        0
+                        {{expenseTypeCardWithComma}}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<script>
+export default{
+    props: ['userData'],
+    data: () => ({
+        incomeWithComma: -1,
+        balanceWithComma: -1,
+        expenseWithComma: -1,
+        expenseTypeCashWithComma: -1,
+        expenseTypeCardWithComma:-1
+    }),
+    created(){
+        this.incomeWithComma = this.numberWithCommas(this.userData.income);
+        this.balanceWithComma = this.numberWithCommas(this.userData.balance);
+        this.expenseWithComma = this.numberWithCommas(this.userData.expense);
+        this.expenseTypeCashWithComma = this.numberWithCommas(this.userData.expenseTypeCash);
+        this.expenseTypeCardWithComma = this.numberWithCommas(this.userData.expenseTypeCard);
+    },
+    methods:{
+        // 정수형으로 들어온 돈에 콤마를 붙여줌
+        numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+    }
+}
+</script>
+
 <style>
 .moneyStateBox {
     display: flex;
