@@ -51,3 +51,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### 데이터 깔끔히 정리. 상위 컴포넌트인 Main에 집중
 #### moneyDetail이 수입일 경우, 파란색이 뜨도록 코딩함
 
+### 4월 12일
+#### 로그인 화면 대충 만들어놓음.
+#### 팀원들에게 php코드 작성 지시
+#### DB스키마 검토했음. 수정사항 지시함.
