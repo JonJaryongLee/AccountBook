@@ -63,3 +63,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### 회원가입 시 진행되는 자산과 고정수입, 고정지출 입력부분 만듦. 
 #### 삭제와 추가 가능함.
 #### ,를 붙여서 화폐보기로 만들려고 했으나, v-for로 구조를 바꾸고 제대로 작동안해서 그냥 내버려둠. 맨 앞 0없애는 것도 마찬가지.
+#### 파이차트 적용중. FusionCharts 이용.

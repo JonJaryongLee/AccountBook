@@ -6,7 +6,7 @@
     </v-app>
 </template>
 <script>
-import Main from './components/newUserSet/setUserProperty.vue';
+import Main from './components/chart/chart.vue';
 
 export default {
     name: 'App',
@@ -20,5 +20,4 @@ export default {
 };
 </script>
 <style>
-
 </style>
