@@ -6,7 +6,7 @@
     </v-app>
 </template>
 <script>
-import Main from './components/login/login.vue';
+import Main from './components/newUserSet/setUserProperty.vue';
 
 export default {
     name: 'App',
