@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-app-bar color="teal lighten-2" height="40%"></v-app-bar>
-        <fusioncharts :type="type" :width="width" :height="height" :dataFormat="dataFormat" :dataSource="dataSource" ref="fc"></fusioncharts>
+        <fusioncharts :type="type" :width="width" :height="height" :dataFormat="dataFormat" :dataSource="dataSource" ref="fc" @dataPlotClick="onSliceClick"></fusioncharts>
     </div>
 </template>
 <script>
@@ -48,7 +48,10 @@ export default {
         }
     }),
     methods: {
-
+        onSliceClick(e){
+            let label = e.data.categoryLabel;
+            console.log(label);
+        }
     }
 }
 </script>
