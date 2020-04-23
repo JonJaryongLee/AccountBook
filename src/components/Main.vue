@@ -33,47 +33,45 @@
                 <moneyState :userData="userData"></moneyState>
             </div>
             <div class="calendar">
-                <calendar 
-                    :monthData="monthData" 
-                >        
+                <calendar :monthData="monthData" @daySelect="daySelect">
                 </calendar>
-<!--                 axios로 calendar에서 moneyDetail 받아올 수 있으면 추후 아래로 고칠 것 -->
-<!--                 <calendar 
+                <!--                 axios로 calendar에서 moneyDetail 받아올 수 있으면 추후 아래로 고칠 것 -->
+                <!--                 <calendar 
                     :monthData="monthData" 
                     @printMoneyDetail="printMoneyDetail">        
                 </calendar> -->
             </div>
             <div class="moneyDetail">
-                <moneyDetail
-                    :moneyDetail="moneyDetail"
-                >        
+                <moneyDetail :moneyDetail="moneyDetail" @addHistory="addHistory">
                 </moneyDetail>
             </div>
         </div>
-        <v-bottom-navigation grow color="blue" app>
-            <v-btn>
-                <span>전체</span>
-                <v-icon>mdi-calendar-month-outline</v-icon>
-            </v-btn>
-            <v-btn>
-                <span>수입</span>
-                <v-icon>mdi-purse-outline</v-icon>
-            </v-btn>
-            <v-btn>
-                <span>지출</span>
-                <v-icon>mdi-credit-card-outline</v-icon>
-            </v-btn>
-            <v-btn>
-                <span>설정</span>
-                <v-icon>mdi-cog-outline</v-icon>
-            </v-btn>
-        </v-bottom-navigation>
+        <appFooter></appFooter>
+        <!-- 생활비 초과 알람 -->
+        <div>
+            <v-dialog v-model="overSpendAlarmDialogShow" width="200">
+                <v-card color="grey">
+                    <div id="OverSpendAlarmIconContainer">
+                        <v-icon size="50" color="red">mdi-alert-outline</v-icon>
+                    </div>
+                    <div id="OverSpendAlarmText">
+                        이번 달 생활비가
+                        <br>
+                        초과되었습니다!
+                    </div>
+                    <div id="OverSpendAlarmCloseBtnContainer">
+                        <v-btn @click="closeOverSpendAlarmDialog">확인</v-btn>
+                    </div>
+                </v-card>
+            </v-dialog>
+        </div>
     </v-app>
 </template>
 <script>
 import calendar from "./calendar/calendar.vue"
 import moneyDetail from "./moneyDetail/moneyDetail.vue"
 import moneyState from "./moneyState/moneyState.vue"
+import appFooter from "./footer/appFooter.vue"
 export default {
     props: {
         source: String,
@@ -81,19 +79,28 @@ export default {
     data: () => ({
         drawer: null,
         left: false,
+        overSpendAlarmDialogShow: false,
+        selectedDay: -1,
+        
         userData: {
             month: 4,
             income: 2000000,
             balance: 581300,
             expense: 1418700,
             expenseTypeCash: 1418700,
-            expenseTypeCard: 0
+            expenseTypeCard: 0,
+
+            //추가됨
+            monthlyLivingExpenseBudget: 500000,
+            monthlyLivingExpenseReal: 490000,
+            monthlyEventSpend: 0,
+            monthlyEmergencySpend:0
         },
         monthData: {
             thisYear: 2020,
             thisMonth: 4,
             spendContent: {
-                1: [2000000,"+"],
+                1: [2000000, "+"],
                 3: [7900, "-"],
                 5: [400000, "-"],
                 7: [56800, "-"],
@@ -112,28 +119,44 @@ export default {
         },
         moneyDetail: {
             moneyDetailsNum: 4,
-            moneyDetailTagData: ["경조사","카페","교통비","기타"],
-            moneyDetailTagIcon: ["mdi-account-group","mdi-coffee","mdi-bus","mdi-minus"],
-            iconColor: ["#FFEB3B","#00838F","#E57373","#F44336"],
+            moneyDetailTagData: ["경조사", "카페", "교통비", "기타"],
+            moneyDetailTagIcon: ["mdi-account-group", "mdi-coffee", "mdi-bus", "mdi-minus"],
+            iconColor: ["#FFEB3B", "#00838F", "#E57373", "#F44336"],
             moneyDetailContentData: ["생일", "스타벅스", "택시", "에어팟"],
             moneyDetailMoneyData: [
-                [80000,"+"],
-                [4500,"-"],
-                [4700,"-"],
-                [170000,"-"]
+                [80000, "+"],
+                [4500, "-"],
+                [4700, "-"],
+                [170000, "-"]
             ]
         }
     }),
     components: {
         'calendar': calendar,
         'moneyDetail': moneyDetail,
-        'moneyState': moneyState
+        'moneyState': moneyState,
+        'appFooter': appFooter
     },
     methods: {
         // axios로 calendar에서 moneyDetail 받아올 수 있으면 추후 아래로 고칠 것
         // printMoneyDetail(moneyDetail){
         //     this.moneyDetail = moneyDetail;
         // }
+
+        // 생활비 경고창
+        overSpendAlarm() {
+            if (this.userData.monthlyLivingExpenseBudget < this.monthlyLivingExpenseReal)
+                this.userData.overSpendAlarmDialogShow = true;
+        },
+        closeOverSpendAlarmDialog() {
+            this.overSpendAlarmDialogShow = false;
+        },
+        daySelect(date){
+            this.selectedDay = date;
+        },
+        addHistory(){
+            this.$emit('addHistory');
+        }
     }
 }
 </script>
@@ -144,5 +167,24 @@ export default {
 
 .moneyDetail {
     padding-bottom: 2%;
+}
+
+#OverSpendAlarmIconContainer {
+    padding-left: 10px;
+    position: relative;
+    top: 5px;
+    display: inline;
+}
+
+#OverSpendAlarmText {
+    display: inline;
+    float: right;
+    padding: 10px;
+}
+
+#OverSpendAlarmCloseBtnContainer {
+    display: block;
+    text-align: center;
+    padding-bottom: 10px;
 }
 </style>

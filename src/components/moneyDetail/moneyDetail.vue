@@ -11,7 +11,7 @@
             <div class="moneyDetailMoney subtitle-1" ref="moneyDetailMoney">{{moneyDetailMoneyDataComma[moneyDetailIndex-1][0]}}원</div>
         </div>
         <div class="plusBtnContainer">
-            <v-btn class="plus_icon mx-2" fab dark color="indigo">
+            <v-btn class="plus_icon mx-2" fab dark color="indigo" @click="addHistory">
                 <v-icon dark>mdi-plus</v-icon>
             </v-btn>
         </div>
@@ -46,6 +46,10 @@ export default {
         // 정수형으로 들어온 돈에 콤마를 붙여줌
         numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
+
+        addHistory(){
+            this.$emit('addHistory')
         }
     }
 }

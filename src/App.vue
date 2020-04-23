@@ -1,10 +1,10 @@
 <template>
     <v-app>
         <v-content>
-            <Main v-if="mainShow" />
+            <Main v-show="mainShow" @addHistory="addHistory"/>
             <Login v-if="loginShow" />
-
-            <Test v-if="testShow" />
+            <SignUpUserSet v-if="signUpUserSetShow" />
+            <SpendInput v-if="spendInputShow" />
         </v-content>
     </v-app>
 </template>
@@ -12,20 +12,28 @@
 import Main from './components/Main.vue';
 import Login from './components/login/login.vue';
 
-import Test from './components/login/newUserSet/setUserProperty.vue';
+import SignUpUserSet from './components/login/newUserSet/setUserProperty.vue';
+
+import SpendInput from './components/spendInput/spendInput.vue'
 
 export default {
     name: 'App',
 
     components: {
-        Main, Login, Test
+        Main, Login, SignUpUserSet, SpendInput
     },
     data: () => ({
         loginShow: false,
-        mainShow: false,
-
-        testShow: true
+        mainShow: true,
+        signUpUserSetShow: false,
+        spendInputShow: false
     }),
+    methods:{
+        addHistory(){
+            this.mainShow = false;
+            this.spendInputShow = true;
+        }
+    }
 };
 </script>
 <style>
