@@ -1,7 +1,13 @@
 <template>
     <div>
-        <v-app-bar color="teal lighten-2" height="40%"></v-app-bar>
-        <fusioncharts :type="type" :width="width" :height="height" :dataFormat="dataFormat" :dataSource="dataSource" ref="fc" @dataPlotClick="onSliceClick"></fusioncharts>
+        <div id="chartContainerInChart">
+            <fusioncharts :type="type" :width="width" :height="height" :dataFormat="dataFormat" :dataSource="dataSource" ref="fc" @dataPlotClick="onSliceClick"></fusioncharts>
+        </div>
+        <div class="chartListInChart" v-for="(expenseList, index) in expenseLists" :key="index">
+            <div class="dateInChartListInChart">{{expenseList[0]}}</div>
+            <div class="contentInChartListInChart">{{expenseList[1]}}</div>
+            <div class="moneyInChartListInChart">{{expenseList[2]}}</div>
+        </div>
     </div>
 </template>
 <script>
@@ -23,8 +29,7 @@ export default {
                 "enableMultiSlicing": "0",
                 "theme": "fusion",
             },
-            data: [
-                {
+            data: [{
                     "label": "월세",
                     "value": "350000"
                 },
@@ -45,15 +50,37 @@ export default {
                     "value": "20000"
                 }
             ]
-        }
+        },
+        expenseLists: [
+            ["4/13", "택시", "4,700원"],
+            ["4/22", "버스", "1,500원"]
+        ]
     }),
     methods: {
-        onSliceClick(e){
+        onSliceClick(e) {
             let label = e.data.categoryLabel;
             console.log(label);
+            // 해당 태그에 해당되는 내역만 출력한다.
         }
     }
 }
 </script>
 <style>
+#chartContainerInChart{
+    border-bottom: 2px solid gray;
+}
+
+.chartListInChart {
+    border-bottom: 1px solid grey;
+    text-align: center;
+}
+
+.dateInChartListInChart,
+.contentInChartListInChart,
+.moneyInChartListInChart {
+    display: inline-block;
+    vertical-align: top;
+    width: 33.33%;
+    font-size: 1.2rem;
+}
 </style>

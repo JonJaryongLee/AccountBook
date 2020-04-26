@@ -1,10 +1,9 @@
 <template>
     <v-app>
         <v-content>
-            <Main v-show="mainShow" @addHistory="addHistory"/>
+            <Main v-if="mainShow"/>
             <Login v-if="loginShow" />
             <SignUpUserSet v-if="signUpUserSetShow" />
-            <SpendInput v-if="spendInputShow" />
         </v-content>
     </v-app>
 </template>
@@ -14,25 +13,19 @@ import Login from './components/login/login.vue';
 
 import SignUpUserSet from './components/login/newUserSet/setUserProperty.vue';
 
-import SpendInput from './components/spendInput/spendInput.vue'
-
 export default {
     name: 'App',
 
     components: {
-        Main, Login, SignUpUserSet, SpendInput
+        Main, Login, SignUpUserSet
     },
     data: () => ({
         loginShow: false,
         mainShow: true,
-        signUpUserSetShow: false,
-        spendInputShow: false
+        signUpUserSetShow: false
     }),
     methods:{
-        addHistory(){
-            this.mainShow = false;
-            this.spendInputShow = true;
-        }
+
     }
 };
 </script>
