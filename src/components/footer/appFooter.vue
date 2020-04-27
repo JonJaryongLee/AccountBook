@@ -3,7 +3,7 @@
         <v-menu top :offset-y="offset">
             <template v-slot:activator="{ on }">
                 <v-bottom-navigation grow color="blue" app>
-                    <v-btn>
+                    <v-btn @click="goMain">
                         <span>전체</span>
                         <v-icon>mdi-calendar-month-outline</v-icon>
                     </v-btn>
@@ -15,7 +15,7 @@
                         <span>지출</span>
                         <v-icon>mdi-credit-card-outline</v-icon>
                     </v-btn>
-                    <v-btn>
+                    <v-btn @click="goSetting">
                         <span>설정</span>
                         <v-icon>mdi-cog-outline</v-icon>
                     </v-btn>
@@ -42,6 +42,12 @@ export default {
     methods: {
         test(item) {
             console.log(item.title);
+        },
+        goSetting(){
+            this.$emit('goSetting');
+        },
+        goMain(){
+            this.$emit('goMain');
         }
     }
 }

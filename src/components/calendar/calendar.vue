@@ -65,15 +65,18 @@ export default {
         for(let i=0;i<Object.keys(this.sepndContentWithComma).length; i++) {
             index = Object.keys(this.sepndContentWithComma)[i];
             this.sepndContentWithComma[index][0] = this.numberWithCommas(this.sepndContentWithComma[index][0]);
+            this.sepndContentWithComma[index][2] = this.numberWithCommas(this.sepndContentWithComma[index][2]);
         }
 
         //spendContent 나누기
         for (let i = 0; i < Object.keys(this.sepndContentWithComma).length; i++) {
             index = Object.keys(this.sepndContentWithComma)[i];
-            if (this.sepndContentWithComma[index][1] == "+") {
-                this.dateIncomeDetailNumArray[index - 1] = this.sepndContentWithComma[index][0];
-            } else
-                this.dateExpenseDetailNumArray[index - 1] = this.sepndContentWithComma[index][0];
+            this.dateIncomeDetailNumArray[index - 1] = this.sepndContentWithComma[index][0];
+            if(this.dateIncomeDetailNumArray[index-1]==0)
+                this.dateIncomeDetailNumArray[index-1] = null;
+            this.dateExpenseDetailNumArray[index - 1] = this.sepndContentWithComma[index][2];
+            if(this.dateExpenseDetailNumArray[index-1]==0)
+                this.dateExpenseDetailNumArray[index-1] = null; 
         }
     },
     mounted(){

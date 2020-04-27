@@ -17,8 +17,6 @@ export default {
         width: '100%',
         height: '400',
         dataFormat: 'json',
-        radioValue: 'none',
-        lastActive: 'none',
         dataSource: {
             chart: {
                 "caption": "생활비",
