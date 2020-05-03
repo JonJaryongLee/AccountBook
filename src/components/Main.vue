@@ -4,12 +4,18 @@
             <v-icon color="white" @click="goChart">{{chartModeIcon}}</v-icon>
             <v-spacer></v-spacer>
             <!-- 툴바엔 몇 월이 들어갈지 나옴 -->
-            <v-toolbar-title class="month">
+            <v-toolbar-title class="month" v-if="mainScreenShow">
                 {{userData.month}}월
             </v-toolbar-title>
+            <v-toolbar-title v-else>
+                {{spendModeTag}}
+            </v-toolbar-title>
             <v-spacer />
-            <v-btn icon>
+            <v-btn icon v-if="tuneIcon">
                 <v-icon color="white" @click.stop="drawer = !drawer">mdi-tune</v-icon>
+            </v-btn>
+            <v-btn icon v-if="plusIcon">
+                <v-icon color="white" @click="addSpendCategory">mdi-plus</v-icon>
             </v-btn>
         </v-app-bar>
         <v-navigation-drawer v-model="drawer" app right>
@@ -58,8 +64,9 @@
         <setting v-if="settingShow" @goMenuOfOption="goMenuOfOption"></setting>
         <userSet v-if="userSetShow"></userSet>
         <incomeCategorySet v-if="incomeCategorySetShow"></incomeCategorySet>
-        <expenseCategorySet v-if="expenseCategorySetShow"></expenseCategorySet>
+        <expenseCategorySet v-if="expenseCategorySetShow" @setSpendMode="setSpendMode"></expenseCategorySet>
         <goalSet v-if="goalSetShow"></goalSet>
+        <addSpendMode v-if="addSpendModeShow"></addSpendMode>
         <appFooter @goSetting="goSetting" @goMain="goMain"></appFooter>
         <!-- 생활비 초과 알람 -->
         <div>
@@ -96,6 +103,7 @@ import userSet from "./setting/settingChildren/userSet.vue"
 import incomeCategorySet from "./setting/settingChildren/incomeCategorySet.vue"
 import expenseCategorySet from "./setting/settingChildren/expenseCategorySet.vue"
 import goalSet from "./setting/settingChildren/goalSet.vue"
+import addSpendMode from "./setting/settingChildren/addSpendMode.vue"
 export default {
     props: {
         source: String,
@@ -117,6 +125,10 @@ export default {
         expenseCategorySetShow: false,
         goalSetShow: false,
         chartModeIcon: "mdi-timelapse",
+        spendModeTag: null,
+        tuneIcon: true,
+        plusIcon: false,
+        addSpendModeShow: false,
         userData: {
             month: 4,
             income: 2000000,
@@ -182,7 +194,8 @@ export default {
         'userSet': userSet,
         'incomeCategorySet': incomeCategorySet,
         'expenseCategorySet': expenseCategorySet,
-        'goalSet': goalSet
+        'goalSet': goalSet,
+        'addSpendMode': addSpendMode
     },
     methods: {
         // axios로 calendar에서 moneyDetail 받아올 수 있으면 추후 아래로 고칠 것
@@ -208,6 +221,10 @@ export default {
             this.incomeCategorySetShow = false;
             this.expenseCategorySetShow = false;
             this.goalSetShow = false;
+            this.spendModeTag = null;
+            this.tuneIcon = true;
+            this.plusIcon = false;
+            this.addSpendModeShow = false;
         },
         closeOverSpendAlarmDialog() {
             this.overSpendAlarmDialogShow = false;
@@ -277,6 +294,16 @@ export default {
                 this.expenseCategorySetShow = true;
             else
                 this.goalSetShow = true;
+        },
+        setSpendMode(spendTag){
+            this.shutDown();
+            this.spendModeTag = spendTag;
+            this.tuneIcon = false;
+            this.plusIcon = true;
+            this.addSpendModeShow = true;
+        },
+        addSpendCategory(){
+            console.log("add!");
         }
     }
 }

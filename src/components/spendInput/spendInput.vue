@@ -12,8 +12,14 @@
             </div>
         </div>
         <div id="btnContainerInSpendInput">
-            <v-btn @click="registerSpend">등록</v-btn>
+            <v-btn @click="dialogOpen">등록</v-btn>
         </div>
+        <v-dialog persistent v-model="dialogShow">
+            
+                <v-btn color="green" @click="registerSpend('카드')">카드</v-btn>
+                <v-btn color="blue" @click="registerSpend('현금')">현금</v-btn>
+            
+        </v-dialog>
     </div>
 </template>
 <script>
@@ -37,18 +43,24 @@ export default {
             ["술", "mdi-glass-mug-variant", "#009688"]
         ],
         selectedContentName: "내역",
-        userInputMoney:null
+        userInputMoney: null,
+        dialogShow : false
     }),
     methods: {
-        iconSelect(name){
+        iconSelect(name) {
             this.selectedContentName = name;
         },
         numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
-        registerSpend(){
+        dialogOpen(){
+            this.dialogShow = true;
+        },
+        registerSpend(payType) {
+            this.dialogShow = false;
+            console.log(payType);
             // axios로 해당 날짜에 해당되는 지출내역을 송신
-                // 금액, 종류
+            // 금액, 종류, 카드인지 현금인지
             // 그리고 getMoneyDetail.php에서 받은것처럼 받아 화면에 붙일 것
 
             // 추후에 받은 데이터를 변수로 추가할 것
@@ -58,22 +70,23 @@ export default {
 }
 </script>
 <style>
-#inputInMoneyBoxInSpendInput{
+#inputInMoneyBoxInSpendInput {
     height: 100%;
     width: 107%;
     text-align: right;
-    font-size: 1.5rem; 
+    font-size: 1.5rem;
     padding-right: 5%;
 }
 
-#moneyBoxInSpendInput, #contentInSpendInput{
+#moneyBoxInSpendInput,
+#contentInSpendInput {
     border: 1px solid grey;
     border-radius: 10px;
 }
 
-#moneyBoxInSpendInput{
+#moneyBoxInSpendInput {
     display: inline-block;
-    width:80%;
+    width: 80%;
     margin-top: 10%;
     margin-left: 10%;
     text-align: right;
@@ -81,7 +94,7 @@ export default {
     height: 40px;
 }
 
-#wonLetterInSpendInput{
+#wonLetterInSpendInput {
     display: inline-block;
     vertical-align: top;
     margin-top: 11%;
@@ -89,34 +102,34 @@ export default {
     font-size: 1.5rem;
 }
 
-#contentInSpendInput{
+#contentInSpendInput {
     display: inline-block;
-    width:80%;
+    width: 80%;
     margin-top: 5%;
     margin-left: 10%;
     padding-left: 2%;
 }
 
-#iconListInSpendInput{
+#iconListInSpendInput {
     margin-top: 10%;
     margin-bottom: 5%;
 }
 
-.iconsInSpendInput{
+.iconsInSpendInput {
     display: inline-block;
-    width:20%;
+    width: 20%;
     height: 100px;
     vertical-align: top;
-    text-align:center;
+    text-align: center;
     padding-top: 5%;
 }
 
 .iconsInSpendInput:hover {
-    background-color:#F8BBD0;
-    color:white;
+    background-color: #F8BBD0;
+    color: white;
 }
 
-#btnContainerInSpendInput{
+#btnContainerInSpendInput {
     text-align: right;
     margin-right: 5%;
 }
