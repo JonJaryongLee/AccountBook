@@ -119,7 +119,7 @@ if($moneyDetailMoneyDataOfIndexDevision == "-"){//지출
 
 else if($moneyDetailMoneyDataOfIndexDevision == "+" and ($moneyDetailTagDataOfIndex == "일급" or $moneyDetailTagDataOfIndex == "주급"){//노동
     mysqli_query($db, "DELETE FROM work_income where Content = '$moneyDetailContentDataOfIndex' and Category_Detail = '$moneyDetailTagDataOfIndex' and (work_income.Time * $incomeOfTime) = $moneyDetailMoneyDataOfIndexPrice and (SUBSTRING(Date_d, 1, 10)) = '$date' and ID = '".$_SESSION["ses_username"]."'");  }
-else if($moneyDetailMoneyDataOfIndexDevision == "+" and $moneyDetailTagDataOfIndex !== "일급" and $moneyDetailTagDataOfIndex !== "주급") {//기타수입
+else if($moneyDetailMoneyDataOfIndexDevision == "+" and $moneyDetailTagDataOfIndex !== "일급" and $moneyDetailTagDataOfIndex !== "주급" and $moneyDetailTagDataOfIndex !== "월급") {//기타수입
    mysqli_query($db, "DELETE FROM income where Content = '$moneyDetailContentDataOfIndex' and Category_Detail = '$moneyDetailTagDataOfIndex' and price = $moneyDetailMoneyDataOfIndexPrice and (SUBSTRING(Date_d, 1, 10)) = '$date' and ID = '".$_SESSION["ses_username"]."'");
   }
 else{

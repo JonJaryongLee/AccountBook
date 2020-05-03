@@ -14,8 +14,8 @@ $_POST = JSON_DECODE(file_get_contents("php://input"), true);
     $memberAge = $_POST["age"];
     $memberSex = $_POST["sex"];
     
-    $memberTotalProperty = (int)$_POST["userTotalProperty"];
-    $memberincomeMonthly = (int)$_POST["incomeMonthly"];
+    $memberTotalProperty = $_POST["userTotalProperty"];
+    $memberincomeMonthly = $_POST["incomeMonthly"];
     
     $memberspendFixedList = $_POST["spendFixedList"];
     
@@ -40,7 +40,7 @@ $_POST = JSON_DECODE(file_get_contents("php://input"), true);
         }
         else
         {
-            mysqli_query($db,"INSERT INTO user(ID,PW,Name,Sex,Age,Cash,Fix_Income) VALUES('".$memberId."', '".$memberPw."', '".$memberName."', '".$memberSex."', '$memberAge', '$memberTotalProperty', '$memberincomeMonthly' )");
+            mysqli_query($db,"INSERT INTO user(ID,PW,Name,Sex,Age,Cash,Fix_Income) VALUES('".$memberId."', '".$memberPw."', '".$memberName."', '".$memberSex."', '".$memberAge."', '$memberTotalProperty', '$memberincomeMonthly' )");
  
 
             for($i = 0; $i < (count($memberspendFixedList[0])); $i++) {

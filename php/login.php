@@ -101,16 +101,37 @@ $sql = "SELECT * FROM user WHERE ID = '$memberId' AND PW = '$memberPw'"; // 로�
 
             $spendContent = array();
            
-           	$res5 = mysqli_query($db, "SELECT SUBSTRING(Date_d, 9, 2) as Date_d, price, Division, num from income where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) UNION all select SUBSTRING(Date_d, 9, 2) as Date_d, (user.Change_income*work_income.Time) as price, Division, num from work_income,user where work_income.ID = '".$_SESSION["ses_username"]."' and user.ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) UNION all select SUBSTRING(Date_d, 9, 2), price, Division, num from spend where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) order by Date_d");
-           //이번달에 속하는 일, 금액, 구분  
+$res5 = mysqli_query($db, "SELECT
+   ifnull(plus.Date_d, minus.Date_d) as Date_d,
+    ifnull(plus.price, 0) as plus_price,
+    '+' as Division_plus,
+   ifnull(minus.price, 0) as minus_price,
+   '-' as Division_minus
+FROM (select MAX(Date_d) Date_d, sum(price) as price, MAX(Division) Division from 
+(
+   select SUBSTRING(Date_d, 9, 2) as Date_d, sum((user.Change_income*work_income.Time)) as price, max(Division) Division 
+   from work_income,user 
+      where work_income.ID = '".$_SESSION["ses_username"]."' and user.ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) GROUP BY Date_d    
+       UNION ALL 
+    select SUBSTRING(Date_d, 9, 2) as Date_d, sum(price), max(Division) as a
+     from income 
+        where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) GROUP by Date_d
+) as basetable
+group by Date_d)plus
+LEFT JOIN 
+(select SUBSTRING(Date_d, 9, 2) as Date_d, sum(price) as price, max(Division) as Division 
+           from spend 
+          where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) 
+         GROUP by Date_d)minus
+on minus.Date_d = plus.Date_d
+ORDER by Date_d");
+           //이번달에 속하는 일, 금액, 구분    
 /*
 sql 설명 
-기타수입에서 이번달의 날짜,금액,구분,num(키값) 뽑아내서 아래 sql과 union
-노동수입에서 이번달의 날짜,금액,구분,num(키값) 뽑아내서 아래sql과 union
-지출에서 날짜, 금액 ,구분,num(키값) 
+
 */
             while($row = mysqli_fetch_array($res5)) { 
-            $spendContent[(int)$row[0]][] = array((int)$row[1], $row[2]);
+            $spendContent[(int)$row[0]] = array((int)$row[1], $row[2], $row[3], $row[4]);
             }
 
 
