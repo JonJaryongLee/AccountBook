@@ -87,3 +87,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 5월 3일 작업내용
 #### 설정부 UI작업중. 지출 카테고리는 미완성했고 해야할 목록들은 해당 컴포넌트에 메모해둠
+
+### 5월 7일 작업내용
+#### 로그인 기능 ajax 테스트 성공. 

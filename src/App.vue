@@ -1,8 +1,8 @@
 <template>
     <v-app>
         <v-content>
-            <Main v-if="mainShow" />
-            <Login v-if="loginShow" />
+            <Main v-if="mainShow" :data="data"/>
+            <Login v-if="loginShow" @login="login"/>
             <SignUpUserSet v-if="signUpUserSetShow" />
         </v-content>
     </v-app>
@@ -24,28 +24,29 @@ export default {
         SignUpUserSet
     },
     data: () => ({
-        loginShow: false,
-        mainShow: true,
+        loginShow: true,
+        mainShow: false,
         signUpUserSetShow: false,
 
-        test: {
-            id: "gunmo",
-            pw: "**uplus1214",
-            name: "김건모",
-            age: "20대",
-            sex: "남자",
-            userTotalProperty: 300000,
-            incomeMonthly: 100000,
-            spendFixedList: [
-                ['월세','통신비','적금'],
-                [300000,30000,20000]
-            ],
-            spendFlexibleList: [
-                ['생활비','경조사'],
-                [100000,100000]
-            ],
-            userGoals: ["100만원 모으기"]
-        }
+        data: {}
+        // data: {
+        //     id: "gunmo",
+        //     pw: "**uplus1214",
+        //     name: "김건모",
+        //     age: "20대",
+        //     sex: "남자",
+        //     userTotalProperty: 300000,
+        //     incomeMonthly: 100000,
+        //     spendFixedList: [
+        //         ['월세','통신비','적금'],
+        //         [300000,30000,20000]
+        //     ],
+        //     spendFlexibleList: [
+        //         ['생활비','경조사'],
+        //         [100000,100000]
+        //     ],
+        //     userGoals: ["100만원 모으기"]
+        // }
     }),
     created() {
         // axios.post('/php/signUp.php', this.test)
@@ -58,7 +59,11 @@ export default {
         //     })
     },
     methods: {
-
+        login(data){
+            this.loginShow = false;
+            this.mainShow = true;
+            this.data = data;
+        }
     }
 };
 </script>

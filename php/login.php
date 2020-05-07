@@ -1,4 +1,4 @@
-<?
+<?php
 
 class loginObject{
 	public $thisYear;
@@ -34,12 +34,13 @@ $sql = "SELECT * FROM user WHERE ID = '$memberId' AND PW = '$memberPw'"; // 로�
             $_SESSION["ses_username"] = $row['ID'];
             //세션변수를 선언 (현재 접속자의 정보)
        
-            $userData = new uData;//객체생성 
+            $userData1 = new uData;//객체생성 
             
             $udMonth = date("n");// date("n") = 현재 월을 숫자로 반환함 
-            $userData -> month = (int)$udMonth;// int형으로 형변환 시킨후 속성에 추가
+            $userData1 -> month = (int)$udMonth;// int형으로 형변환 시킨후 속성에 추가
             
             $res1 = mysqli_query($db, "SELECT sum(price) as price from (select SUBSTRING(Date_d, 9, 2) as Date_d, price, Division, Content from income where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) UNION all select SUBSTRING(Date_d, 9, 2) as Date_d, (user.Change_income*work_income.Time) as price, Division, Content from work_income, user where work_income.ID = '".$_SESSION["ses_username"]."' and user.ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()))ic");
+
             /*re1(sql 구현과정) 총수익을 가져오는 sql 이다 . 월총수입 = 월노동수입 + 월일반수입 
             
             첫번째 select문(sum(price) as price)은 union한 테이블들의 price 값을 모두 더한것 
@@ -53,7 +54,7 @@ $sql = "SELECT * FROM user WHERE ID = '$memberId' AND PW = '$memberPw'"; // 로�
             $row = mysqli_fetch_array($res1);//res1을 배열로 변환시켜 row에 담는다 
             $monthTotalIncome = $row[0];// row에 담긴 정보를 다시 변수 ic에 담는다 
 
-            $userData -> income = (int)$monthTotalIncome; //int로 변환시켜 income에 넣는다.
+            $userData1 -> income = (int)$monthTotalIncome; //int로 변환시켜 income에 넣는다.
             //34~ 49line 은 income 부분 
 
 
@@ -62,41 +63,41 @@ $sql = "SELECT * FROM user WHERE ID = '$memberId' AND PW = '$memberPw'"; // 로�
 
             $row = mysqli_fetch_array($res2);
             $monthExpense = $row[0];
-            $userData -> expense = (int)$monthExpense;
+            $userData1 -> expense = (int)$monthExpense;
             //54~58 expense 부분
 
 
             $monthBalance =  ($monthTotalIncome - $monthExpense);//월총수입 = 월지출 = 월잔액 
-            $userData -> balance = (int)$monthBalance;
+            $userData1 -> balance = (int)$monthBalance;
             // 62~63 balance 부분
 
 
             $res3 = mysqli_query($db, "SELECT sum(price) from spend where ID= '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) and Use_division='현금'");
             $row = mysqli_fetch_array($res3);
             $monthCash = $row[0];
-            $userData -> expenseTypeCash = (int)$monthCash;
+            $userData1 -> expenseTypeCash = (int)$monthCash;
             //해당월 현금 지출
 
             $res4 = mysqli_query($db, "SELECT sum(price) from spend where ID= '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) and Use_division='카드'");
             $row = mysqli_fetch_array($res4);
             $monthCard = $row[0];
-            $userData -> expenseTypeCard = (int)$monthCard;
+            $userData1 -> expenseTypeCard = (int)$monthCard;
             //해당월 카드지출 
+             $userData = array();
+            $userData["userData"] = $userData1;
+            
+           
 
-            echo json_encode($userData,JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
-            // userData객체를 json으로 변환해서 전송
-              
 
+//여기 아래부터는 monthData1 객체부분에 들어갈 코드
 
-//여기 아래부터는 monthDate 객체부분에 들어갈 코드
-
-            $monthDate = new loginObject;
+            $monthData1 = new loginObject;
            	$year = date("Y");
            	$month = date("n"); 
            	//변수선언 이번년도,이번달
 
-            $monthDate -> thisYear = (int)$year;
-            $monthDate -> thisMonth = (int)$month;
+            $monthData1 -> thisYear = (int)$year;
+            $monthData1 -> thisMonth = (int)$month;
 
 
             $spendContent = array();
@@ -135,17 +136,23 @@ sql 설명
             }
 
 
-            $monthDate -> spendContent = (object)$spendContent; 
+            $monthData1 -> spendContent = (object)$spendContent; 
             //배열 형태로 보내줄 chartData 
-            echo json_encode($monthDate,JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
-            //monthDate객체를 json으로 전송 
+            $monthData = array();
+            $monthData["monthData"] = $monthData1;
 
+
+            $obj_merged = (object) array_merge((array) $userData, (array) $monthData);
+            echo json_encode($obj_merged);
+
+            
         }
  
         else if($row == null){                                                    //만약 배열에 아무것도 없다면
         $b = false;
          echo json_encode($b,JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);          //에러
         }
+
  mysqli_close($db);
 
 ?>

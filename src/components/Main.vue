@@ -105,9 +105,7 @@ import expenseCategorySet from "./setting/settingChildren/expenseCategorySet.vue
 import goalSet from "./setting/settingChildren/goalSet.vue"
 import addSpendMode from "./setting/settingChildren/addSpendMode.vue"
 export default {
-    props: {
-        source: String,
-    },
+    props: ['data'],
     data: () => ({
         drawer: null,
         right: false,
@@ -129,43 +127,8 @@ export default {
         tuneIcon: true,
         plusIcon: false,
         addSpendModeShow: false,
-        userData: {
-            month: 4,
-            income: 2000000,
-            balance: 581300,
-            expense: 1418700,
-            expenseTypeCash: 1418700,
-            expenseTypeCard: 0,
-
-            //추가됨
-            monthlyLivingExpenseBudget: 500000,
-            monthlyLivingExpenseReal: 490000,
-            monthlyEventSpend: 0,
-            monthlyEmergencySpend: 0
-        },
-        monthData: {
-            thisYear: 2020,
-            thisMonth: 4,
-
-            // 여기에 항목별 태그도 추가할 것
-            spendContent: {
-                1: [2000000, "+", 1000, '-'],
-                3: [0,'+',7900, "-"],
-                5: [0,'+',400000, "-"],
-                7: [0,'+',56800, "-"],
-                8: [0,'+',6000, "-"],
-                9: [0,'+',25000, "-"],
-                10: [0,'+',500000, "-"],
-                12: [0,'+',36700, "-"],
-                13: [0,'+',259200, "-"],
-                14: [0,'+',10500, "-"],
-                15: [0,'+',53600, "-"],
-                16: [0,'+',10200, "-"],
-                17: [0,'+',5000, "-"],
-                20: [0,'+',12800, "-"],
-                21: [0,'+',35000, "-"]
-            }
-        },
+        userData: {},
+        monthData: {},
         moneyDetail: {
             moneyDetailsNum: 4,
             moneyDetailTagData: ["경조사", "카페", "교통비", "기타"],
@@ -180,6 +143,10 @@ export default {
             ]
         }
     }),
+    created(){
+        this.userData=this.data.userData;
+        this.monthData=this.data.monthData;
+    },
     components: {
         'calendar': calendar,
         'moneyDetail': moneyDetail,

@@ -93,6 +93,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
     data: () => ({
         valid: false,
@@ -127,15 +128,22 @@ export default {
             this.pw = "";
         },
         login() {
-            // axios를 통해 로그인한다.
-            this.dialogForLogin = false;
-            console.log("로그인 진행");
-            console.log("id: ", this.id);
-            console.log("pw: ", this.pw);
-            this.loginFail = true;
-            setTimeout(() => {
-                this.loginFail = false;
-            }, 3000);
+            axios.post('/php/login.php', { "id": this.id, "pw": this.pw })
+                .then(response => {
+                    if (response.data == false) {
+                        this.dialogForLogin = false;
+                        this.loginFail = true;
+                        setTimeout(() => {
+                            this.loginFail = false;
+                        }, 3000);
+                        return;
+                    }
+                    this.$emit('login', response.data);
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                })
         },
         showPassword() {
             if (this.passwordType == "password") {
