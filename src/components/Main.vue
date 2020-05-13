@@ -51,7 +51,7 @@
                 </calendar> -->
             </div>
             <div class="moneyDetail">
-                <moneyDetail :moneyDetail="moneyDetail" @addHistory="addHistory">
+                <moneyDetail v-if="moneyDetailShow" :moneyDetail="moneyDetail" @addHistory="addHistory">
                 </moneyDetail>
             </div>
         </div>
@@ -127,6 +127,7 @@ export default {
         tuneIcon: true,
         plusIcon: false,
         addSpendModeShow: false,
+        moneyDetailShow: false,
         userData: {},
         monthData: {},
         moneyDetail: {
@@ -146,6 +147,7 @@ export default {
     created(){
         this.userData=this.data.userData;
         this.monthData=this.data.monthData;
+        console.log(this.data);
     },
     components: {
         'calendar': calendar,

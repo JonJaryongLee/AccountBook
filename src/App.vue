@@ -3,7 +3,7 @@
         <v-content>
             <Main v-if="mainShow" :data="data" />
             <Login v-if="loginShow" @login="login" @signUpDataRegInLoginVue="signUpDataRegInLoginVue" @setIDPWUserName="setIDPWUserName" />
-            <SignUpUserSet v-if="signUpUserSetShow" @goMain="goMain" @saveSpendFixedList="saveSpendFixedList" />
+            <SignUpUserSet v-if="signUpUserSetShow" @goMain="goMain" @saveSpendFixedList="saveSpendFixedList" @propertySet="propertySet" :userName="userName"/>
         </v-content>
     </v-app>
 </template>
@@ -31,7 +31,7 @@ export default {
         pw: "",
         userName: "",
         data: {
-            userData:{
+            userData: {
                 month: 5,
                 income: 0,
                 balance: 0,
@@ -42,9 +42,7 @@ export default {
             monthData: {
                 thisYear: 0,
                 thisMonth: 0,
-                spendContent: {
-
-                }
+                spendContent: {}
             }
         },
         signUpSet: {}
@@ -100,26 +98,38 @@ export default {
                 }
             }
             this.signUpSet.userGoals = a;
+            this.signUpUserSetShow = false;
             axios.post('/php/signUp.php', this.signUpSet)
-            .then(response => {
-                if(response.data)
-                {
-                    const d = new Date();
-                    this.data.userData.year = d.getFullYear()
-                    this.data.userData.month = d.getMonth() + 1;
-                    this.data.userData.balance = this.signUpSet.userTotalProperty
-                    this.signUpUserSetShow = false;
-                    this.mainShow = true;
-                }
-            })
-            .catch(error => {
-                if (error)
-                    console.log("실패!");
-            })
+                .then(response => {
+                    if (response.data) {
+                        const d = new Date();
+                        this.data.monthData.thisYear = d.getFullYear()
+                        this.data.userData.month = d.getMonth() + 1;
+                        this.data.monthData.thisMonth = d.getMonth() + 1;
+                        this.mainShow = true;
+                    }
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
+            this.data.userData.income = this.signUpSet.incomeMonthly;
+            let spend = 0;
+            for (let i = this.signUpSet.spendFixedList[0].length - 1; i >= 0; i--) {
+                spend += this.signUpSet.spendFixedList[1][i];
+            }
+            for (let i = this.signUpSet.spendFlexibleList[0].length - 1; i >= 0; i--) {
+                spend += this.signUpSet.spendFlexibleList[1][i];
+            }
+            this.data.userData.expense = spend;
+            this.data.userData.expenseTypeCash = spend;
         },
         saveSpendFixedList(spendFixedList) {
 
             this.signUpSet.spendFixedList = spendFixedList;
+        },
+        propertySet(property) {
+            this.data.userData.balance = property;
         }
     }
 };

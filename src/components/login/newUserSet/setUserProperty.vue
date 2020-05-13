@@ -44,7 +44,7 @@
             </v-dialog>
         </div>
         <div v-if="setUserSpendIntroShow">
-            <setUserSpendIntro @nextPageInSetUserSpendIntro="nextPageInSetUserSpendIntro" :property="property"></setUserSpendIntro>
+            <setUserSpendIntro @nextPageInSetUserSpendIntro="nextPageInSetUserSpendIntro" :property="property" :userName="userName"></setUserSpendIntro>
         </div>
         <div v-if="setUserSpendShow">
             <setUserSpend @goSetGoals="goSetGoals"></setUserSpend>
@@ -55,7 +55,7 @@
     </div>
 </template>
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 import setUserSpendIntro from './setUserSpendIntro.vue'
 import setUserSpend from './setUserSpend.vue'
 import setGoals from './setGoals.vue'
@@ -65,6 +65,7 @@ export default {
         setUserSpend,
         setGoals
     },
+    props: ['userName'],
     data: () => ({
         spendFixedListLabel: ['월세', '통신비', '공과금', '적금'],
         spendFixedListMoney: [null, null, null, null],
@@ -100,21 +101,21 @@ export default {
             spendFixedList[0] = this.spendFixedListLabel;
             spendFixedList[1] = this.spendFixedListMoney;
             this.$emit('saveSpendFixedList', spendFixedList);
-            
-            // axios.post('/php/calLeftProperty.php', {
-            //         "userTotalProperty": this.userTotalProperty,
-            //         "incomeMonthly": this.incomeMonthly,
-            //         "spendList": [this.spendFixedListLabel, this.spendFixedListMoney]
-            //     }).then(response => {
-            //         console.log(response.data);
-            //     })
-            //     .catch(error => {
-            //         if (error)
-            //             console.log("실패!");
-            //     })
-            this.property = 1000000;
-            this.setUserPropertyShow = false;
-            this.setUserSpendIntroShow = true;
+
+            axios.post('/php/calLeftProperty.php', {
+                    "userTotalProperty": this.userTotalProperty,
+                    "incomeMonthly": this.incomeMonthly,
+                    "spendList": [this.spendFixedListLabel, this.spendFixedListMoney]
+                }).then(response => {
+                    this.property = response.data;
+                    this.$emit('propertySet',this.property);
+                    this.setUserPropertyShow = false;
+                    this.setUserSpendIntroShow = true;
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                })
         },
         nextPageInSetUserSpendIntro() {
             this.setUserSpendIntroShow = false;
