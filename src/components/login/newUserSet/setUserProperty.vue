@@ -11,8 +11,8 @@
                         <v-text-field label="고정수입" required v-model="incomeMonthly" type="number"></v-text-field>
                     </v-col>
                     고정지출
-                    <v-col cols="12" v-for="index in label.length" :key="index">
-                        <v-text-field :label="label[index-1]" v-model="spendMoney[index-1]" type="number"></v-text-field>
+                    <v-col cols="12" v-for="index in spendFixedListLabel.length" :key="index">
+                        <v-text-field :label="spendFixedListLabel[index-1]" v-model="spendFixedListMoney[index-1]" type="number"></v-text-field>
                         <div id="minusBtnContainerInSetUserProperty">
                             <v-btn dark fab x-small color="red" @click="removeList(index-1)">
                                 <v-icon>mdi-minus</v-icon>
@@ -47,10 +47,10 @@
             <setUserSpendIntro @nextPageInSetUserSpendIntro="nextPageInSetUserSpendIntro"></setUserSpendIntro>
         </div>
         <div v-if="setUserSpendShow">
-            <setUserSpend @goSetGoals = "goSetGoals"></setUserSpend>
+            <setUserSpend @goSetGoals="goSetGoals"></setUserSpend>
         </div>
         <div v-if="setGoalsShow">
-            <setGoals></setGoals>
+            <setGoals @goMain="goMain"></setGoals>
         </div>
     </div>
 </template>
@@ -60,18 +60,20 @@ import setUserSpend from './setUserSpend.vue'
 import setGoals from './setGoals.vue'
 export default {
     components: {
-        setUserSpendIntro, setUserSpend, setGoals
+        setUserSpendIntro,
+        setUserSpend,
+        setGoals
     },
     data: () => ({
-        label: ['월세', '통신비', '공과금', '적금'],
-        spendMoney: [null, null, null, null],
+        spendFixedListLabel: ['월세', '통신비', '공과금', '적금'],
+        spendFixedListMoney: [null, null, null, null],
         userTotalProperty: null,
         incomeMonthly: null,
         addListShow: false,
         setUserPropertyShow: true,
         setUserSpendIntroShow: false,
         setUserSpendShow: false,
-        setGoalsShow : false,
+        setGoalsShow: false,
         newList: ""
     }),
     methods: {
@@ -79,28 +81,35 @@ export default {
             this.addListShow = true;
         },
         removeList(index) {
-            this.label.splice(index, 1);
-            this.spendMoney.splice(index, 1);
+            this.spendFixedListLabel.splice(index, 1);
+            this.spendFixedListMoney.splice(index, 1);
         },
         addList() {
             this.addListShow = false;
-            this.label.push(this.newList);
-            this.spendMoney.push(null);
+            this.spendFixedListLabel.push(this.newList);
+            this.spendFixedListMoney.push(null);
             this.newList = "";
-            console.log(this.label);
-            console.log(this.spendMoney);
         },
         next() {
+            let spendFixedList = [[],[]];
+            spendFixedList[0] = this.spendFixedListLabel;
+            spendFixedList[1] = this.spendFixedListMoney;
+            this.$emit('saveSpendFixedList', spendFixedList);
             this.setUserPropertyShow = false;
             this.setUserSpendIntroShow = true;
         },
-        nextPageInSetUserSpendIntro(){
+        nextPageInSetUserSpendIntro() {
             this.setUserSpendIntroShow = false;
             this.setUserSpendShow = true;
         },
-        goSetGoals(){
+        goSetGoals(data) {
+            this.spendFlaxibleList = data;
             this.setUserSpendShow = false;
             this.setGoalsShow = true;
+        },
+        goMain(goals) {
+            this.$emit('goMain',[goals,this.userTotalProperty,this.incomeMonthly,this.spendFixedList,this.spendFlaxibleList]);
+
         }
     }
 }

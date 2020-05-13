@@ -163,17 +163,36 @@ export default {
             this.sex = "남자";
         },
         signUp() {
-            console.log("회원가입 진행");
-            console.log("id: ", this.id);
-            console.log("pw: ", this.pw);
-            console.log("name: ", this.userName);
-            console.log("age: ", this.age);
-            console.log("sex: ", this.sex);
-            this.signUpFail = true;
-            this.dialogForSignUp = false;
-            setTimeout(() => {
-                this.signUpFail = false;
-            }, 3000);
+            if (this.id == "" || this.pw == "" || this.userName == "")
+                return;
+            axios.post('/php/signUpIdCheck.php', { "id": this.id })
+                .then(response => {
+                    if (response.data == false) {
+                        this.signUpFail = true;
+                        this.dialogForSignUp = false;
+                        setTimeout(() => {
+                            this.signUpFail = false;
+                        }, 3000);
+                        return;
+                    } else {
+                        this.$emit('setIDPWUserName', {
+                            'id': this.id,
+                            'pw': this.pw,
+                            'userName': this.userName
+                        });
+                        this.$emit('signUpDataRegInLoginVue', [
+                            this.id,
+                            this.pw,
+                            this.userName,
+                            this.age,
+                            this.sex
+                        ]);
+                    }
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                })
         }
     }
 }

@@ -34,8 +34,7 @@ export default {
     }),
     methods: {
         goMain(){
-            console.log("goMain")
-            console.log(this.checked);
+            this.$emit("goMain",this.checked)
         }
     }
 }

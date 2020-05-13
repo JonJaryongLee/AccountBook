@@ -54,7 +54,10 @@ export default {
             this.addListShow = true;
         },
         next() {
-            this.$emit('goSetGoals');
+            let spendFlaxibleList = [[],[]];
+            spendFlaxibleList[0] = this.label;
+            spendFlaxibleList[1] = this.spendMoney;
+            this.$emit('goSetGoals',spendFlaxibleList);
         },
         addList() {
             this.addListShow = false;

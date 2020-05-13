@@ -1,9 +1,9 @@
 <template>
     <v-app>
         <v-content>
-            <Main v-if="mainShow" :data="data"/>
-            <Login v-if="loginShow" @login="login"/>
-            <SignUpUserSet v-if="signUpUserSetShow" />
+            <Main v-if="mainShow" :data="data" />
+            <Login v-if="loginShow" @login="login" @signUpDataRegInLoginVue="signUpDataRegInLoginVue" @setIDPWUserName="setIDPWUserName"/>
+            <SignUpUserSet v-if="signUpUserSetShow" @goMain="goMain" @saveSpendFixedList="saveSpendFixedList"/>
         </v-content>
     </v-app>
 </template>
@@ -27,8 +27,11 @@ export default {
         loginShow: true,
         mainShow: false,
         signUpUserSetShow: false,
+        id:"",
+        pw:"",
+        userName:"",
 
-        data: {}
+        data: {},
         // data: {
         //     id: "gunmo",
         //     pw: "**uplus1214",
@@ -47,6 +50,7 @@ export default {
         //     ],
         //     userGoals: ["100만원 모으기"]
         // }
+        signUpSet: {}
     }),
     created() {
         // axios.post('/php/signUp.php', this.test)
@@ -59,10 +63,44 @@ export default {
         //     })
     },
     methods: {
-        login(data){
+        login(data) {
             this.loginShow = false;
             this.mainShow = true;
             this.data = data;
+        },
+        signUpDataRegInLoginVue(data) {
+            this.signUpSet.id = data[0];
+            this.signUpSet.pw = data[1];
+            this.signUpSet.name = data[2];
+            this.signUpSet.age = data[3];
+            this.signUpSet.sex = data[4];
+            this.loginShow = false;
+            this.signUpUserSetShow = true;
+        },
+        setIDPWUserName(data){
+            this.id = data.id;
+            this.pw = data.pw;
+            this.userName = data.userName;
+        },
+        goMain(data){
+            this.signUpSet.userGoals = data[0];
+            this.signUpSet.userTotalProperty = Number(data[1]);
+            this.signUpSet.incomeMonthly = Number(data[2]);
+        
+            this.signUpSet.spendFiexibleList = data[4];
+            
+
+            for(let i=0;i<this.signUpSet.spendFiexibleList[1].length; i++){
+                this.signUpSet.spendFiexibleList[1][i] = Number(this.signUpSet.spendFiexibleList[1][i]);
+            }
+            for(let i=0;i<this.signUpSet.spendFixedList[0].length; i++){
+                this.signUpSet.spendFixedList[1][i] = Number(this.signUpSet.spendFixedList[1][i]);
+            }
+            console.log(this.signUpSet);
+        },
+        saveSpendFixedList(spendFixedList){
+         
+            this.signUpSet.spendFixedList = spendFixedList;
         }
     }
 };
