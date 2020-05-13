@@ -93,3 +93,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 5월 11일 작업내용
 #### 회원가입 기능 ajax 테스트중
+
+### 5월 13일 작업내용
+#### 회원가입 ajax 테스트 성공.
+#### 중간보고 작성중
