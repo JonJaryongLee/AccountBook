@@ -2,8 +2,8 @@
     <v-app>
         <v-content>
             <Main v-if="mainShow" :data="data" />
-            <Login v-if="loginShow" @login="login" @signUpDataRegInLoginVue="signUpDataRegInLoginVue" @setIDPWUserName="setIDPWUserName"/>
-            <SignUpUserSet v-if="signUpUserSetShow" @goMain="goMain" @saveSpendFixedList="saveSpendFixedList"/>
+            <Login v-if="loginShow" @login="login" @signUpDataRegInLoginVue="signUpDataRegInLoginVue" @setIDPWUserName="setIDPWUserName" />
+            <SignUpUserSet v-if="signUpUserSetShow" @goMain="goMain" @saveSpendFixedList="saveSpendFixedList" />
         </v-content>
     </v-app>
 </template>
@@ -27,9 +27,9 @@ export default {
         loginShow: true,
         mainShow: false,
         signUpUserSetShow: false,
-        id:"",
-        pw:"",
-        userName:"",
+        id: "",
+        pw: "",
+        userName: "",
 
         data: {},
         // data: {
@@ -77,29 +77,47 @@ export default {
             this.loginShow = false;
             this.signUpUserSetShow = true;
         },
-        setIDPWUserName(data){
+        setIDPWUserName(data) {
             this.id = data.id;
             this.pw = data.pw;
             this.userName = data.userName;
         },
-        goMain(data){
+        goMain(data) {
             this.signUpSet.userGoals = data[0];
             this.signUpSet.userTotalProperty = Number(data[1]);
             this.signUpSet.incomeMonthly = Number(data[2]);
-        
-            this.signUpSet.spendFiexibleList = data[4];
-            
 
-            for(let i=0;i<this.signUpSet.spendFiexibleList[1].length; i++){
+            this.signUpSet.spendFiexibleList = data[4];
+
+
+            for (let i = 0; i < this.signUpSet.spendFiexibleList[1].length; i++) {
                 this.signUpSet.spendFiexibleList[1][i] = Number(this.signUpSet.spendFiexibleList[1][i]);
             }
-            for(let i=0;i<this.signUpSet.spendFixedList[0].length; i++){
+            for (let i = 0; i < this.signUpSet.spendFixedList[0].length; i++) {
                 this.signUpSet.spendFixedList[1][i] = Number(this.signUpSet.spendFixedList[1][i]);
             }
+
+            let a = [];
+            for (let i = data[0].length - 1; i >= 0; i--) {
+                if (data[0][i]) {
+                    if (i == 0)
+                        a.unshift('일년 적금 들기');
+                    else if (i == 1)
+                        a.unshift('100만원 모으기');
+                    else if (i == 2)
+                        a.unshift('일주일에 외식 한 번');
+                    else if (i == 3)
+                        a.unshift('카페 일주일 두 번');
+                    else
+                        a.unshift('전셋집 자금 마련하기');
+                }
+            }
+            this.signUpSet.userGoals = a;
+
             console.log(this.signUpSet);
         },
-        saveSpendFixedList(spendFixedList){
-         
+        saveSpendFixedList(spendFixedList) {
+
             this.signUpSet.spendFixedList = spendFixedList;
         }
     }

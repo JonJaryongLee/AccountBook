@@ -31,9 +31,9 @@
 </template>
 <script>
 export default {
+    props: ['property'],
     data: () => ({
-        userName: "이자룡", // 추후 상위컴포넌트에서 받아올 것
-        property: 800000
+        userName: "이자룡" // 추후 상위컴포넌트에서 받아올 것
     }),
     created() {
         // 고정수입과 고정지출을 상위컴포넌트에서 받아와 남은 자산 계산

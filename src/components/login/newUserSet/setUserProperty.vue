@@ -44,7 +44,7 @@
             </v-dialog>
         </div>
         <div v-if="setUserSpendIntroShow">
-            <setUserSpendIntro @nextPageInSetUserSpendIntro="nextPageInSetUserSpendIntro"></setUserSpendIntro>
+            <setUserSpendIntro @nextPageInSetUserSpendIntro="nextPageInSetUserSpendIntro" :property="property"></setUserSpendIntro>
         </div>
         <div v-if="setUserSpendShow">
             <setUserSpend @goSetGoals="goSetGoals"></setUserSpend>
@@ -74,7 +74,8 @@ export default {
         setUserSpendIntroShow: false,
         setUserSpendShow: false,
         setGoalsShow: false,
-        newList: ""
+        newList: "",
+        property: 0
     }),
     methods: {
         addDialogShow() {
