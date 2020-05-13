@@ -55,6 +55,7 @@
     </div>
 </template>
 <script>
+// import axios from 'axios'
 import setUserSpendIntro from './setUserSpendIntro.vue'
 import setUserSpend from './setUserSpend.vue'
 import setGoals from './setGoals.vue'
@@ -92,10 +93,26 @@ export default {
             this.newList = "";
         },
         next() {
-            let spendFixedList = [[],[]];
+            let spendFixedList = [
+                [],
+                []
+            ];
             spendFixedList[0] = this.spendFixedListLabel;
             spendFixedList[1] = this.spendFixedListMoney;
             this.$emit('saveSpendFixedList', spendFixedList);
+            
+            // axios.post('/php/calLeftProperty.php', {
+            //         "userTotalProperty": this.userTotalProperty,
+            //         "incomeMonthly": this.incomeMonthly,
+            //         "spendList": [this.spendFixedListLabel, this.spendFixedListMoney]
+            //     }).then(response => {
+            //         console.log(response.data);
+            //     })
+            //     .catch(error => {
+            //         if (error)
+            //             console.log("실패!");
+            //     })
+            this.property = 1000000;
             this.setUserPropertyShow = false;
             this.setUserSpendIntroShow = true;
         },
@@ -109,7 +126,7 @@ export default {
             this.setGoalsShow = true;
         },
         goMain(goals) {
-            this.$emit('goMain',[goals,this.userTotalProperty,this.incomeMonthly,this.spendFixedList,this.spendFlaxibleList]);
+            this.$emit('goMain', [goals, this.userTotalProperty, this.incomeMonthly, this.spendFixedList, this.spendFlaxibleList]);
 
         }
     }

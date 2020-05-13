@@ -12,7 +12,7 @@ import Main from './components/Main.vue';
 import Login from './components/login/login.vue';
 
 import SignUpUserSet from './components/login/newUserSet/setUserProperty.vue';
-// import axios from 'axios'
+import axios from 'axios'
 
 
 export default {
@@ -30,38 +30,25 @@ export default {
         id: "",
         pw: "",
         userName: "",
+        data: {
+            userData:{
+                month: 5,
+                income: 0,
+                balance: 0,
+                expense: 0,
+                expenseTypeCash: 0,
+                expenseTypeCard: 0,
+            },
+            monthData: {
+                thisYear: 0,
+                thisMonth: 0,
+                spendContent: {
 
-        data: {},
-        // data: {
-        //     id: "gunmo",
-        //     pw: "**uplus1214",
-        //     name: "김건모",
-        //     age: "20대",
-        //     sex: "남자",
-        //     userTotalProperty: 300000,
-        //     incomeMonthly: 100000,
-        //     spendFixedList: [
-        //         ['월세','통신비','적금'],
-        //         [300000,30000,20000]
-        //     ],
-        //     spendFlexibleList: [
-        //         ['생활비','경조사'],
-        //         [100000,100000]
-        //     ],
-        //     userGoals: ["100만원 모으기"]
-        // }
+                }
+            }
+        },
         signUpSet: {}
     }),
-    created() {
-        // axios.post('/php/signUp.php', this.test)
-        //     .then(response => {
-        //         console.log(response.data)
-        //     })
-        //     .catch(error => {
-        //         if (error)
-        //             console.log("실패!");
-        //     })
-    },
     methods: {
         login(data) {
             this.loginShow = false;
@@ -87,11 +74,11 @@ export default {
             this.signUpSet.userTotalProperty = Number(data[1]);
             this.signUpSet.incomeMonthly = Number(data[2]);
 
-            this.signUpSet.spendFiexibleList = data[4];
+            this.signUpSet.spendFlexibleList = data[4];
 
 
-            for (let i = 0; i < this.signUpSet.spendFiexibleList[1].length; i++) {
-                this.signUpSet.spendFiexibleList[1][i] = Number(this.signUpSet.spendFiexibleList[1][i]);
+            for (let i = 0; i < this.signUpSet.spendFlexibleList[1].length; i++) {
+                this.signUpSet.spendFlexibleList[1][i] = Number(this.signUpSet.spendFlexibleList[1][i]);
             }
             for (let i = 0; i < this.signUpSet.spendFixedList[0].length; i++) {
                 this.signUpSet.spendFixedList[1][i] = Number(this.signUpSet.spendFixedList[1][i]);
@@ -113,8 +100,22 @@ export default {
                 }
             }
             this.signUpSet.userGoals = a;
-
-            console.log(this.signUpSet);
+            axios.post('/php/signUp.php', this.signUpSet)
+            .then(response => {
+                if(response.data)
+                {
+                    const d = new Date();
+                    this.data.userData.year = d.getFullYear()
+                    this.data.userData.month = d.getMonth() + 1;
+                    this.data.userData.balance = this.signUpSet.userTotalProperty
+                    this.signUpUserSetShow = false;
+                    this.mainShow = true;
+                }
+            })
+            .catch(error => {
+                if (error)
+                    console.log("실패!");
+            })
         },
         saveSpendFixedList(spendFixedList) {
 
