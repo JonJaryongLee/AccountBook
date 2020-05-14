@@ -24,8 +24,8 @@ export default {
         SignUpUserSet
     },
     data: () => ({
-        loginShow: false,
-        mainShow: true,
+        loginShow: true,
+        mainShow: false,
         signUpUserSetShow: false,
         id: "",
         pw: "",
@@ -67,21 +67,22 @@ export default {
             this.pw = data.pw;
             this.userName = data.userName;
         },
+
+        // 하위 컴포넌트에서 data를 넘겨받아 회원가입 준비를 함
         goMain(data) {
-            this.signUpSet.userGoals = data[0];
-            this.signUpSet.userTotalProperty = Number(data[1]);
-            this.signUpSet.incomeMonthly = Number(data[2]);
+            this.signUpSet.userGoals = data[0];                     // 유저의 목표
+            this.signUpSet.userTotalProperty = Number(data[1]);     // 유저의 총 자산
+            this.signUpSet.incomeMonthly = Number(data[2]);         // 유저의 월 수입
 
-            this.signUpSet.spendFlexibleList = data[4];
-
-
+            this.signUpSet.spendFlexibleList = data[4];             // 유저의 변동수입
             for (let i = 0; i < this.signUpSet.spendFlexibleList[1].length; i++) {
-                this.signUpSet.spendFlexibleList[1][i] = Number(this.signUpSet.spendFlexibleList[1][i]);
+                this.signUpSet.spendFlexibleList[1][i] = Number(this.signUpSet.spendFlexibleList[1][i]);  // string형의 유저 변동수입을 int로 바꿈
             }
             for (let i = 0; i < this.signUpSet.spendFixedList[0].length; i++) {
-                this.signUpSet.spendFixedList[1][i] = Number(this.signUpSet.spendFixedList[1][i]);
+                this.signUpSet.spendFixedList[1][i] = Number(this.signUpSet.spendFixedList[1][i]);        // string 형의 유저 고정수입을 int로 바꿈
             }
 
+            // 사용자 목표는 다섯 개 정해진 목표에 boolean형인 배열. 이것을 String배열로 바꿔줄 작업
             let a = [];
             for (let i = data[0].length - 1; i >= 0; i--) {
                 if (data[0][i]) {
@@ -98,15 +99,19 @@ export default {
                 }
             }
             this.signUpSet.userGoals = a;
+
+            // SignUp 기능을 하는 컴포넌트를 끔
             this.signUpUserSetShow = false;
+
+            // 서버에 ajax통신으로 모아진 signUpSet 데이터를 전송함.
             axios.post('/php/signUp.php', this.signUpSet)
                 .then(response => {
                     if (response.data) {
                         const d = new Date();
-                        this.data.monthData.thisYear = d.getFullYear()
-                        this.data.userData.month = d.getMonth() + 1;
-                        this.data.monthData.thisMonth = d.getMonth() + 1;
-                        this.mainShow = true;
+                        this.data.monthData.thisYear = d.getFullYear()      // 올해
+                        this.data.userData.month = d.getMonth() + 1;        // 이번달
+                        this.data.monthData.thisMonth = d.getMonth() + 1;   //  역시 이번달
+                        this.mainShow = true;                               // 메인화면 띄움
                     }
                 })
                 .catch(error => {
