@@ -24,8 +24,8 @@ export default {
         SignUpUserSet
     },
     data: () => ({
-        loginShow: true,
-        mainShow: false,
+        loginShow: false,
+        mainShow: true,
         signUpUserSetShow: false,
         id: "",
         pw: "",
