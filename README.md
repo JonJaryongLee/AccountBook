@@ -97,3 +97,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### 5월 13일 작업내용
 #### 회원가입 ajax 테스트 성공.
 #### 중간보고 작성중
+
+### 5월 15일 작업내용
+#### moneyDetail ajax통신테스트. 생활비 항목에서만 데이터를 넘겨주는 에러 발견해 서버에 수정 요청
