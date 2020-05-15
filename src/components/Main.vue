@@ -196,7 +196,6 @@ export default {
                 }).then(response => {
                     this.moneyDetail = {};
                     this.moneyDetail = response.data.moneyDetail;
-                    console.log(this.moneyDetail);
                     this.moneyDetailShow = true;
                 })
                 .catch(error => {
