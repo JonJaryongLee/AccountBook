@@ -100,3 +100,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 5월 15일 작업내용
 #### moneyDetail ajax통신테스트. 생활비 항목에서만 데이터를 넘겨주는 에러 발견해 서버에 수정 요청
+#### 서버에 카테고리 관련 코드 지시함.
