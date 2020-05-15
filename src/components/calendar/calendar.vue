@@ -90,11 +90,7 @@ export default {
             if(date==0)
                 return;
             else{
-                //axios통신으로 this.monthDate.thisYear, this.monthDate.thisMonth, date 넘겨주고
-                //해당 날짜의 moneyDetail정보를 받아옴
-                //그걸 Main으로 넘겨줌
-                //this.$emit('printMoneyDetail',moneyDetail);
-                this.$emit('daySelect',date);
+                this.$emit('printMoneyDetail',date);
             }
         },
         // 정수형으로 들어온 돈에 콤마를 붙여줌

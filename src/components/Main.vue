@@ -42,7 +42,7 @@
                 <moneyState :userData="userData"></moneyState>
             </div>
             <div class="calendar">
-                <calendar :monthData="monthData" @daySelect="daySelect">
+                <calendar :monthData="monthData" @printMoneyDetail="printMoneyDetail">
                 </calendar>
                 <!--                 axios로 calendar에서 moneyDetail 받아올 수 있으면 추후 아래로 고칠 것 -->
                 <!--                 <calendar 
@@ -56,7 +56,6 @@
             </div>
         </div>
         <spendInput v-if="spendInputShow" @registerSpend="registerSpend"></spendInput>
-
         <chart v-if="chartShow"></chart>
         <chartUserType v-if="chartUserTypeShow"></chartUserType>
         <goals v-if="goalsShow"></goals>
@@ -89,6 +88,8 @@
     </v-app>
 </template>
 <script>
+import axios from "axios"
+
 import calendar from "./calendar/calendar.vue"
 import moneyDetail from "./moneyDetail/moneyDetail.vue"
 import moneyState from "./moneyState/moneyState.vue"
@@ -130,24 +131,11 @@ export default {
         moneyDetailShow: false,
         userData: {},
         monthData: {},
-        moneyDetail: {
-            moneyDetailsNum: 4,
-            moneyDetailTagData: ["경조사", "카페", "교통비", "기타"],
-            moneyDetailTagIcon: ["mdi-account-group", "mdi-coffee", "mdi-bus", "mdi-minus"],
-            iconColor: ["#FFEB3B", "#00838F", "#E57373", "#F44336"],
-            moneyDetailContentData: ["생일", "스타벅스", "택시", "에어팟"],
-            moneyDetailMoneyData: [
-                [80000, "+"],
-                [4500, "-"],
-                [4700, "-"],
-                [170000, "-"]
-            ]
-        }
+        moneyDetail: {}
     }),
-    created(){
-        this.userData=this.data.userData;
-        this.monthData=this.data.monthData;
-        console.log(this.data);
+    created() {
+        this.userData = this.data.userData;
+        this.monthData = this.data.monthData;
     },
     components: {
         'calendar': calendar,
@@ -177,7 +165,7 @@ export default {
             if (this.userData.monthlyLivingExpenseBudget < this.monthlyLivingExpenseReal)
                 this.userData.overSpendAlarmDialogShow = true;
         },
-        shutDown(){
+        shutDown() {
             this.chartShow = false;
             this.goalsShow = false;
             this.mainScreenShow = false;
@@ -198,8 +186,23 @@ export default {
         closeOverSpendAlarmDialog() {
             this.overSpendAlarmDialogShow = false;
         },
-        daySelect(date) {
+        printMoneyDetail(date) {
             this.selectedDay = date;
+            this.moneyDetailShow = false;
+            axios.post('/php/getMoneyDetail.php', {
+                    'thisYear': this.monthData.thisYear,
+                    'thisMonth': this.monthData.thisMonth,
+                    'today': date
+                }).then(response => {
+                    this.moneyDetail = {};
+                    this.moneyDetail = response.data.moneyDetail;
+                    console.log(this.moneyDetail);
+                    this.moneyDetailShow = true;
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
         },
         addHistory() {
             this.shutDown();
@@ -236,42 +239,41 @@ export default {
                 this.shutDown();
                 this.chartShow = true;
                 this.chartModeIcon = "mdi-arrow-left"
-            }
-            else{
+            } else {
                 this.shutDown();
                 this.mainScreenShow = true;
                 this.chartModeIcon = "mdi-timelapse";
             }
         },
-        goMain(){
+        goMain() {
             this.shutDown();
             this.mainScreenShow = true;
             this.chartModeIcon = "mdi-timelapse";
         },
-        goSetting(){
+        goSetting() {
             this.shutDown();
             this.settingShow = true;
             this.chartModeIcon = "mdi-arrow-left"
         },
-        goMenuOfOption(item){
+        goMenuOfOption(item) {
             this.shutDown();
-            if(item=="사용자")
+            if (item == "사용자")
                 this.userSetShow = true;
-            else if(item=="수입 카테고리")
+            else if (item == "수입 카테고리")
                 this.incomeCategorySetShow = true;
-            else if(item=="지출 카테고리")
+            else if (item == "지출 카테고리")
                 this.expenseCategorySetShow = true;
             else
                 this.goalSetShow = true;
         },
-        setSpendMode(spendTag){
+        setSpendMode(spendTag) {
             this.shutDown();
             this.spendModeTag = spendTag;
             this.tuneIcon = false;
             this.plusIcon = true;
             this.addSpendModeShow = true;
         },
-        addSpendCategory(){
+        addSpendCategory() {
             console.log("add!");
         }
     }
