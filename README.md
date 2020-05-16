@@ -101,3 +101,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### 5월 15일 작업내용
 #### moneyDetail ajax통신테스트. 생활비 항목에서만 데이터를 넘겨주는 에러 발견해 서버에 수정 요청
 #### 서버에 카테고리 관련 코드 지시함.
+
+### 5월 16일 작업내용
+#### 차트 통신 성공 후 화면에 붙임
+#### Input 에서 category를 서버에서 잘 불러와 붙이기까지 하였으나, 수입과 지출을 나누어 UI를 다시 짤 예정
+#### 대신 Input 버튼은 예쁘게 리디자인

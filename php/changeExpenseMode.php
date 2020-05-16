@@ -72,16 +72,11 @@ sql 설명
             $monthData["monthData"] = $monthData1;
 
 
-            $obj_merged = (object) array_merge((array) $userData, (array) $monthData);
-            echo json_encode($obj_merged);
+            
+            echo json_encode($monthData);
 
             
-        }
- 
-        else if($row == null){                                                    //만약 배열에 아무것도 없다면
-        $b = false;
-         echo json_encode($b,JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);          //에러
-        }
+        
 
  mysqli_close($db);
 
