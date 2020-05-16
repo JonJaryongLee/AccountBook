@@ -79,12 +79,6 @@ export default {
         },
         registerSpend(payType) {
             this.dialogShow = false;
-            console.log(payType);
-            // axios로 해당 날짜에 해당되는 지출내역을 송신
-            // 금액, 종류, 카드인지 현금인지
-            // 그리고 getMoneyDetail.php에서 받은것처럼 받아 화면에 붙일 것
-
-            // 추후에 받은 데이터를 변수로 추가할 것
             this.$emit('registerSpend', {
                 'money': Number(this.userInputMoney),
                 'category': this.selectedCategoryName,

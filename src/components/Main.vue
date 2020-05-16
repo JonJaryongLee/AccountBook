@@ -210,8 +210,17 @@ export default {
         },
 
         //추후 서버에서 받은 변수 추가할 것
-        registerSpend(data) {
-            console.log(data);
+        registerSpend(receivedData) {
+            receivedData.thisYear = this.monthData.thisYear;
+            receivedData.thisMonth = this.monthData.thisMonth;
+            receivedData.today = this.selectedDay;
+            axios.post('/php/setMoneyDetailExpense.php', receivedData).then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
             this.shutDown();
             this.mainScreenShow = true;
             this.chartModeIcon = "mdi-timelapse"
