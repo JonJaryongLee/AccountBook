@@ -43,9 +43,7 @@ export default {
             'month':this.thisMonth,
             'tag':'생활비' 
         }).then(response => {
-
                     this.dataSource.data=response.data;
-                    console.log(this.dataSource.data);
                     this.chartShow = true;
                 })
                 .catch(error => {

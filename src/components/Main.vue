@@ -57,7 +57,7 @@
         </div>
         <spendInput v-if="spendInputShow" @registerSpend="registerSpend"></spendInput>
         <chart v-if="chartShow" :thisMonth="monthData.thisMonth"></chart>
-        <chartUserType v-if="chartUserTypeShow"></chartUserType>
+        <chartUserType v-if="chartUserTypeShow" :thisMonth="monthData.thisMonth"></chartUserType>
         <goals v-if="goalsShow"></goals>
         <userSpendType v-if="userSpendTypeShow" @goMain="goMain"></userSpendType>
         <setting v-if="settingShow" @goMenuOfOption="goMenuOfOption"></setting>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>
+        <div v-if="chartShow">
             <fusioncharts :type="type" :width="width" :height="height" :dataFormat="dataFormat" :dataSource="dataSource" ref="fc"></fusioncharts>
         </div>
         <div id="checkUserType">
@@ -19,11 +19,14 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
+    props: ['thisMonth'],
     data: () => ({
-        userName:"자룡",
-        userAge:"30대",
-        userSex:"남성",
+        chartShow: false,
+        userName: "자룡",
+        userAge: "30대",
+        userSex: "남성",
         type: 'pie2d',
         width: '100%',
         height: '300',
@@ -37,29 +40,22 @@ export default {
                 "enableMultiSlicing": "0",
                 "theme": "fusion",
             },
-            data: [{
-                    "label": "월세",
-                    "value": "350000"
-                },
-                {
-                    "label": "식비",
-                    "value": "75000"
-                },
-                {
-                    "label": "통신비",
-                    "value": "56000"
-                },
-                {
-                    "label": "교통비",
-                    "value": "30000"
-                },
-                {
-                    "label": "전기세",
-                    "value": "20000"
-                }
-            ]
+            data: []
         }
     }),
+    created() {
+        axios.post('/php/getSpendChartData.php', {
+                'month': this.thisMonth,
+                'tag': '생활비'
+            }).then(response => {
+                this.dataSource.data = response.data;
+                this.chartShow = true;
+            })
+            .catch(error => {
+                if (error)
+                    console.log("실패!");
+            });
+    },
     methods: {
 
     }
