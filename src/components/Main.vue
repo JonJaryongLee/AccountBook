@@ -210,7 +210,8 @@ export default {
         },
 
         //추후 서버에서 받은 변수 추가할 것
-        registerSpend() {
+        registerSpend(data) {
+            console.log(data);
             this.shutDown();
             this.mainScreenShow = true;
             this.chartModeIcon = "mdi-timelapse"

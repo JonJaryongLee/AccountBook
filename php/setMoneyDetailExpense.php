@@ -15,7 +15,7 @@ $day = $_POST["today"];
 
 $money = $_POST["money"];
 $content = $_POST["content"];
-$icon = $_POST["icon"];
+$category = $_POST["category"];
 $payType = $_POST["payType"];
 
 
@@ -38,17 +38,7 @@ $date = $year.$bar.$month.$bar.$day;
 
 
 
-$res1 = mysqli_query($db, "SELECT * from under_category where Icon_tag = '".$icon."'");
-
-	$row = mysqli_fetch_array($res1);
-
-	$Category_Detail = $row[0];
-	$Category_name = $row[1];
-
-  //아이콘태그를 활용해 넘어온 태그의 상위카테고리와 하위카테고리를 추출한다 
-  //추출한 정보는 spend테이블에 insert할때 사용한다 
-
-mysqli_query($db,"INSERT INTO spend(ID, Category_Detail, Category_name, Content, Use_division, Date_d, price, Division) VALUES('".$_SESSION["ses_username"]."', '".$Category_Detail."', '".$Category_name."', '".$content."', '".$payType."', '".$date."', '$money', '-' )");
+mysqli_query($db,"INSERT INTO spend(ID, Category_Detail, Category_name, Content, Use_division, Date_d, price, Division) VALUES('".$_SESSION["ses_username"]."', '".$Category_Detail."', '".$category."', '".$content."', '".$payType."', '".$date."', '$money', '-' )");
 //spend 테이블에 지출입력 
 
 

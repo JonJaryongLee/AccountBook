@@ -1,18 +1,23 @@
 <template>
     <div>
-        <div id="moneyBoxInSpendInput">
-            <input type="number" id="inputInMoneyBoxInSpendInput" v-model="userInputMoney">
+        <div v-if="btnShow">
+            <div id="moneyBoxInSpendInput">
+                <input type="number" id="inputInMoneyBoxInSpendInput" v-model="userInputMoney">
+            </div>
+            <div id="wonLetterInSpendInput">원</div>
+            <div id="contentInSpendInput">{{selectedCategoryName}}</div>
+            <div id="contentInputBoxInSpendInput">
+                <input type="text" id="spendContentInput" v-model="content" @click="contentReset()">
+            </div>
+            <div id="btnContainerInSpendInput">
+                <v-btn @click="dialogOpen" color="green">등록</v-btn>
+            </div>
         </div>
-        <div id="wonLetterInSpendInput">원</div>
-        <div id="contentInSpendInput">{{selectedContentName}}</div>
         <div id="iconListInSpendInput" v-if="iconShow">
             <div class="iconsInSpendInput" v-for="(iconName,index) in iconNames" :key="index" @click="iconSelect(iconName[0])">
                 <v-icon :color="iconName[2]" large>{{iconName[1]}}</v-icon>
                 <div>{{iconName[0]}}</div>
             </div>
-        </div>
-        <div id="btnContainerInSpendInput">
-            <v-btn @click="dialogOpen">등록</v-btn>
         </div>
         <v-dialog persistent v-model="dialogShow">
             <v-btn color="green" @click="registerSpend('카드')">카드</v-btn>
@@ -24,32 +29,52 @@
 import axios from 'axios'
 export default {
     data: () => ({
-        selectedContentName: "내역",
+        selectedCategoryName: "내역",
         userInputMoney: null,
         dialogShow: false,
-        iconShow : false
+        iconShow: false,
+        mode: 'upper',
+        btnShow: false,
+        content: "상세내역을 입력해주세요"
     }),
     created() {
         axios.post('/php/getCategory.php', {
-                    'mode': 'upper'
-                }).then(response => {
-                    this.iconNames = response.data;
-                    console.log(this.iconNames);
-                    this.iconShow = true;
-                })
-                .catch(error => {
-                    if (error)
-                        console.log("실패!");
-                });
+                'mode': 'upper'
+            }).then(response => {
+                this.iconNames = response.data.iconNames;
+                this.iconShow = true;
+            })
+            .catch(error => {
+                if (error)
+                    console.log("실패!");
+            });
     },
     methods: {
         iconSelect(name) {
-            this.selectedContentName = name;
+            this.selectedCategoryName = name;
+            if (this.mode == "upper") {
+                this.mode = 'lower';
+                this.iconShow = false;
+                this.btnShow = true;
+                axios.post('/php/getCategory.php', {
+                        'mode': name
+                    }).then(response => {
+                        this.iconNames = [];
+                        this.iconNames = response.data.iconNames;
+                        this.iconShow = true;
+                    })
+                    .catch(error => {
+                        if (error)
+                            console.log("실패!");
+                    });
+            }
         },
         numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
         dialogOpen() {
+            if (this.content == "")
+                return;
             this.dialogShow = true;
         },
         registerSpend(payType) {
@@ -60,7 +85,15 @@ export default {
             // 그리고 getMoneyDetail.php에서 받은것처럼 받아 화면에 붙일 것
 
             // 추후에 받은 데이터를 변수로 추가할 것
-            this.$emit('registerSpend');
+            this.$emit('registerSpend', {
+                'money': Number(this.userInputMoney),
+                'category': this.selectedCategoryName,
+                'content': this.content,
+                'payType': payType
+            });
+        },
+        contentReset() {
+            this.content = "";
         }
     }
 }
@@ -126,7 +159,24 @@ export default {
 }
 
 #btnContainerInSpendInput {
-    text-align: right;
-    margin-right: 5%;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#contentInputBoxInSpendInput {
+    border: 1px solid grey;
+    border-radius: 10px;
+    display: inline-block;
+    width: 80%;
+    margin-top: 5%;
+    margin-left: 10%;
+    padding-left: 2%;
+}
+
+#spendContentInput {
+    height: 100%;
+    width: 107%;
+    text-align: left;
+    color: grey;
 }
 </style>
