@@ -5,7 +5,7 @@
         </div>
         <div id="wonLetterInSpendInput">원</div>
         <div id="contentInSpendInput">{{selectedContentName}}</div>
-        <div id="iconListInSpendInput">
+        <div id="iconListInSpendInput" v-if="iconShow">
             <div class="iconsInSpendInput" v-for="(iconName,index) in iconNames" :key="index" @click="iconSelect(iconName[0])">
                 <v-icon :color="iconName[2]" large>{{iconName[1]}}</v-icon>
                 <div>{{iconName[0]}}</div>
@@ -15,37 +15,33 @@
             <v-btn @click="dialogOpen">등록</v-btn>
         </div>
         <v-dialog persistent v-model="dialogShow">
-            
-                <v-btn color="green" @click="registerSpend('카드')">카드</v-btn>
-                <v-btn color="blue" @click="registerSpend('현금')">현금</v-btn>
-            
+            <v-btn color="green" @click="registerSpend('카드')">카드</v-btn>
+            <v-btn color="blue" @click="registerSpend('현금')">현금</v-btn>
         </v-dialog>
     </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
     data: () => ({
-        iconNames: [
-            ["식비", "mdi-silverware", "#4CAF50"],
-            ["카페", "mdi-coffee-outline", "#3F51B5"],
-            ["편의점", "mdi-store-outline", "#E91E63"],
-            ["의류", "mdi-hanger", "#03A9F4"],
-            ["교통비", "mdi-bus", "#E57373"],
-            ["문화", "mdi-music", "#C2185B"],
-            ["생필품", "mdi-cart-outline", "#FF9800"],
-            ["미용", "mdi-hair-dryer-outline", "#F48FB1"],
-            ["저축", "mdi-cash-usd-outline", "#FFEB3B"],
-            ["의료", "mdi-medical-bag", "#00BCD4"],
-            ["교육", "mdi-school-outline", "#9C27B0"],
-            ["관리비", "mdi-hammer-wrench", "#8BC34A"],
-            ["카드대금", "mdi-credit-card-outline", "#880E4F"],
-            ["기타", "mdi-minus", "#F44336"],
-            ["술", "mdi-glass-mug-variant", "#009688"]
-        ],
         selectedContentName: "내역",
         userInputMoney: null,
-        dialogShow : false
+        dialogShow: false,
+        iconShow : false
     }),
+    created() {
+        axios.post('/php/getCategory.php', {
+                    'mode': 'upper'
+                }).then(response => {
+                    this.iconNames = response.data;
+                    console.log(this.iconNames);
+                    this.iconShow = true;
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
+    },
     methods: {
         iconSelect(name) {
             this.selectedContentName = name;
@@ -53,7 +49,7 @@ export default {
         numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
-        dialogOpen(){
+        dialogOpen() {
             this.dialogShow = true;
         },
         registerSpend(payType) {
