@@ -1,1 +1,0 @@
-$zero = (string)0;
