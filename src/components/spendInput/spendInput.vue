@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="btnShow">
+        <div v-if="lowerCategoryShow">
             <div id="moneyBoxInSpendInput">
                 <input type="number" id="inputInMoneyBoxInSpendInput" v-model="userInputMoney">
             </div>
@@ -34,7 +34,7 @@ export default {
         dialogShow: false,
         iconShow: false,
         mode: 'upper',
-        btnShow: false,
+        lowerCategoryShow: false,
         content: "상세내역을 입력해주세요"
     }),
     created() {
@@ -55,7 +55,7 @@ export default {
             if (this.mode == "upper") {
                 this.mode = 'lower';
                 this.iconShow = false;
-                this.btnShow = true;
+                this.lowerCategoryShow = true;
                 axios.post('/php/getCategory.php', {
                         'mode': name
                     }).then(response => {
@@ -73,7 +73,7 @@ export default {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
         dialogOpen() {
-            if (this.content == "")
+            if (this.content == "" || this.userInputMoney==null)
                 return;
             this.dialogShow = true;
         },

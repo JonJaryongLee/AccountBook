@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div id="chartContainerInChart">
+        <div id="chartContainerInChart" v-if="chartShow">
             <fusioncharts :type="type" :width="width" :height="height" :dataFormat="dataFormat" :dataSource="dataSource" ref="fc" @dataPlotClick="onSliceClick"></fusioncharts>
         </div>
         <div class="chartListInChart" v-for="(expenseList, index) in expenseLists" :key="index">
@@ -11,8 +11,12 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
+    props: ['thisMonth'],
     data: () => ({
+        chartShow: false,
+
         type: 'pie2d',
         width: '100%',
         height: '400',
@@ -27,33 +31,28 @@ export default {
                 "enableMultiSlicing": "0",
                 "theme": "fusion",
             },
-            data: [{
-                    "label": "월세",
-                    "value": "350000"
-                },
-                {
-                    "label": "식비",
-                    "value": "75000"
-                },
-                {
-                    "label": "통신비",
-                    "value": "56000"
-                },
-                {
-                    "label": "교통비",
-                    "value": "30000"
-                },
-                {
-                    "label": "전기세",
-                    "value": "20000"
-                }
-            ]
+            data: []
         },
         expenseLists: [
             ["4/13", "택시", "4,700원"],
             ["4/22", "버스", "1,500원"]
         ]
     }),
+    created(){
+        axios.post('/php/getSpendChartData.php', {
+            'month':this.thisMonth,
+            'tag':'생활비' 
+        }).then(response => {
+
+                    this.dataSource.data=response.data;
+                    console.log(this.dataSource.data);
+                    this.chartShow = true;
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
+    },
     methods: {
         onSliceClick(e) {
             let label = e.data.categoryLabel;

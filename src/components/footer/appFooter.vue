@@ -22,7 +22,7 @@
                 </v-bottom-navigation>
             </template>
             <v-list>
-                <v-list-item v-for="(itemOfSpend, index) in itemOfSpends" :key="index" @click="test(itemOfSpend)" >
+                <v-list-item v-for="(itemOfSpend, index) in itemOfSpends" :key="index" @click="changeCalendarMode(itemOfSpend)" >
                     <v-list-item-title>{{ itemOfSpend.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
@@ -40,8 +40,8 @@ export default {
         offset: true,
     }),
     methods: {
-        test(item) {
-            console.log(item.title);
+        changeCalendarMode(item) {
+            this.$emit('changeCalendarMode',item.title);
         },
         goSetting(){
             this.$emit('goSetting');

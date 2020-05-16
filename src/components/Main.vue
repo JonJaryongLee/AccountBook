@@ -56,7 +56,7 @@
             </div>
         </div>
         <spendInput v-if="spendInputShow" @registerSpend="registerSpend"></spendInput>
-        <chart v-if="chartShow"></chart>
+        <chart v-if="chartShow" :thisMonth="monthData.thisMonth"></chart>
         <chartUserType v-if="chartUserTypeShow"></chartUserType>
         <goals v-if="goalsShow"></goals>
         <userSpendType v-if="userSpendTypeShow" @goMain="goMain"></userSpendType>
@@ -66,7 +66,7 @@
         <expenseCategorySet v-if="expenseCategorySetShow" @setSpendMode="setSpendMode"></expenseCategorySet>
         <goalSet v-if="goalSetShow"></goalSet>
         <addSpendMode v-if="addSpendModeShow"></addSpendMode>
-        <appFooter @goSetting="goSetting" @goMain="goMain"></appFooter>
+        <appFooter @goSetting="goSetting" @goMain="goMain" @changeCalendarMode="changeCalnedarMode"></appFooter>
         <!-- 생활비 초과 알람 -->
         <div>
             <v-dialog v-model="overSpendAlarmDialogShow" width="200">
@@ -203,10 +203,11 @@ export default {
                         console.log("실패!");
                 });
         },
-        addHistory() {
-            this.shutDown();
-            this.spendInputShow = true;
-            this.chartModeIcon = "mdi-arrow-left";
+        addHistory(flag) {
+            //this.shutDown();
+            console.log(flag);
+            //this.spendInputShow = true;
+            //this.chartModeIcon = "mdi-arrow-left";
         },
 
         //추후 서버에서 받은 변수 추가할 것
@@ -284,6 +285,17 @@ export default {
         },
         addSpendCategory() {
             console.log("add!");
+        },
+        changeCalnedarMode(mode){
+            axios.post('/php/changeExpenseMode.php', {
+                'mode': mode
+            }).then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
         }
     }
 }

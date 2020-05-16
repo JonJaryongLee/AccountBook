@@ -34,7 +34,7 @@ if($day < 10){
 $date = $year.$bar.$month.$bar.$day;
 //년 월 일을 db에 맞게 변환
 
-$res = mysqli_query($db, "SELECT Category_name from under_category where Category_Detail = .'".$category."' ");
+$res = mysqli_query($db, "SELECT Category_name from under_category where Category_Detail = '".$category."' ");
 
 $row = mysqli_fetch_array($res);
 $Category_name = $row[0];
