@@ -34,11 +34,13 @@ if($day < 10){
 $date = $year.$bar.$month.$bar.$day;
 //년 월 일을 db에 맞게 변환
 
+$res = mysqli_query($db, "SELECT Category_name from under_category where Category_Detail = .'".$category."' ");
+
+$row = mysqli_fetch_array($res);
+$Category_name = $row[0];
 
 
-
-
-mysqli_query($db,"INSERT INTO spend(ID, Category_Detail, Category_name, Content, Use_division, Date_d, price, Division) VALUES('".$_SESSION["ses_username"]."', '".$Category_Detail."', '".$category."', '".$content."', '".$payType."', '".$date."', '$money', '-' )");
+mysqli_query($db,"INSERT INTO spend(ID, Category_Detail, Category_name, Content, Use_division, Date_d, price, Division) VALUES('".$_SESSION["ses_username"]."', '".$category."', '".$Category_name."', '".$content."', '".$payType."', '".$date."', '$money', '-' )");
 //spend 테이블에 지출입력 
 
 
