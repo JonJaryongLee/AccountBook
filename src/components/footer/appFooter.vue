@@ -35,7 +35,8 @@ export default {
         itemOfSpends: [
             { title: '생활비' },
             { title: '경조사' },
-            { title: '비상금' }
+            { title: '비상금' },
+            { title: '교통비' }
         ],
         offset: true,
     }),

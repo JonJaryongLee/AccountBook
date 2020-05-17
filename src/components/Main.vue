@@ -41,7 +41,7 @@
             <div class="moneyState">
                 <moneyState :userData="userData"></moneyState>
             </div>
-            <div class="calendar">
+            <div class="calendar" v-if="calendarShow">
                 <calendar :monthData="monthData" @printMoneyDetail="printMoneyDetail">
                 </calendar>
                 <!--                 axios로 calendar에서 moneyDetail 받아올 수 있으면 추후 아래로 고칠 것 -->
@@ -50,8 +50,8 @@
                     @printMoneyDetail="printMoneyDetail">        
                 </calendar> -->
             </div>
-            <div class="moneyDetail">
-                <moneyDetail v-if="moneyDetailShow" :moneyDetail="moneyDetail" @addHistory="addHistory">
+            <div class="moneyDetail" v-if="moneyDetailShow">
+                <moneyDetail :moneyDetail="moneyDetail" :monthData="monthData" :selectedDay="selectedDay" @addHistory="addHistory">
                 </moneyDetail>
             </div>
         </div>
@@ -129,6 +129,7 @@ export default {
         plusIcon: false,
         addSpendModeShow: false,
         moneyDetailShow: false,
+        calendarShow: true,
         userData: {},
         monthData: {},
         moneyDetail: {}
@@ -257,7 +258,18 @@ export default {
         },
         goMain() {
             this.shutDown();
-            this.mainScreenShow = true;
+            this.calendarShow = false;
+            axios.get('/php/getUserData.php').then(response => {
+                    this.monthData = {};
+                    this.monthData = response.data.monthData;
+                    this.calendarShow = true;
+                    this.mainScreenShow = true;
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
+            
             this.chartModeIcon = "mdi-timelapse";
         },
         goSetting() {
@@ -287,10 +299,14 @@ export default {
             console.log("add!");
         },
         changeCalnedarMode(mode){
+            this.moneyDetailShow = false;
+            this.calendarShow = false;
             axios.post('/php/changeExpenseMode.php', {
                 'mode': mode
             }).then(response => {
-                    console.log(response.data);
+                    this.monthData = {};
+                    this.monthData = response.data.monthData;
+                    this.calendarShow = true;
                 })
                 .catch(error => {
                     if (error)

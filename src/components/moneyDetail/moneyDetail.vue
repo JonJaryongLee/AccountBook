@@ -1,6 +1,6 @@
 <template>
     <div id="moneyDetail">
-        <div class="moneyDetailItemContainer" v-for="moneyDetailIndex in moneyDetail.moneyDetailsNum" :key="moneyDetailIndex">
+        <div class="moneyDetailItemContainer" v-for="moneyDetailIndex in moneyDetail.moneyDetailsNum" :key="moneyDetailIndex" @click="test(moneyDetailIndex-1)">
             <div class="iconContainerInMoneyDetailItemContainer" ref="iconContainerInMoneyDetailItemContainer">
                 <v-icon class="iconInMoneyDetail" ref="iconInMoneyDetail" color="white">{{moneyDetail.moneyDetailTagIcon[moneyDetailIndex-1]}}</v-icon>
             </div>
@@ -30,7 +30,7 @@
 </template>
 <script>
 export default {
-    props: ['moneyDetail'],
+    props: ['moneyDetail', 'monthData', 'selectedDay'],
     data: () => ({
         moneyDetailMoneyDataComma: [],
         direction: 'top',
@@ -67,6 +67,17 @@ export default {
 
         addHistory(flag) {
             this.$emit('addHistory', flag);
+        },
+        test(index){
+            console.log(this.moneyDetail.iconColor[index]);
+            console.log(this.moneyDetail.moneyDetailContentData[index]);
+            console.log(this.moneyDetail.moneyDetailMoneyData[index]);
+            console.log(this.moneyDetail.moneyDetailTagData[index]);
+            console.log(this.moneyDetail.moneyDetailTagIcon[index]);
+            console.log(this.monthData.thisYear);
+            console.log(this.monthData.thisMonth);
+            console.log(this.selectedDay);
+
         }
     }
 }
