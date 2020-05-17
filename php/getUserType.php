@@ -17,13 +17,9 @@ while($row = mysqli_fetch_array($sql)){
   array_push($money_material, array("type" => $row[0], "describe" => $row[1]))
 }
 
-while($row = mysql_fetch_assoc($result2)) {
-  echo $row['Material']." ".
-       $row['Text']." ".
-       "<br />";
+$data = $money_material;
 
-
-echo json_encode($money_material, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
+echo json_encode($data, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
 mysqli_close($db);
 
  ?>

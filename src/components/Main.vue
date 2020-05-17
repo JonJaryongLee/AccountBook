@@ -38,7 +38,7 @@
             </v-list>
         </v-navigation-drawer>
         <div class="mainScreen" v-show="mainScreenShow">
-            <div class="moneyState">
+            <div class="moneyState" v-if="moneyStateShow">
                 <moneyState :userData="userData"></moneyState>
             </div>
             <div class="calendar" v-if="calendarShow">
@@ -51,7 +51,7 @@
                 </calendar> -->
             </div>
             <div class="moneyDetail" v-if="moneyDetailShow">
-                <moneyDetail :moneyDetail="moneyDetail" :monthData="monthData" :selectedDay="selectedDay" @addHistory="addHistory">
+                <moneyDetail :moneyDetail="moneyDetail" :monthData="monthData" :selectedDay="selectedDay" :mode="mode" @addHistory="addHistory" @deleteDetail="deleteDetail">
                 </moneyDetail>
             </div>
         </div>
@@ -66,7 +66,7 @@
         <expenseCategorySet v-if="expenseCategorySetShow" @setSpendMode="setSpendMode"></expenseCategorySet>
         <goalSet v-if="goalSetShow"></goalSet>
         <addSpendMode v-if="addSpendModeShow"></addSpendMode>
-        <appFooter @goSetting="goSetting" @goMain="goMain" @changeCalendarMode="changeCalnedarMode"></appFooter>
+        <appFooter @goSetting="goSetting" @goMain="goMain" @changeCalendarMode="changeCalendarMode"></appFooter>
         <!-- 생활비 초과 알람 -->
         <div>
             <v-dialog v-model="overSpendAlarmDialogShow" width="200">
@@ -132,7 +132,9 @@ export default {
         calendarShow: true,
         userData: {},
         monthData: {},
-        moneyDetail: {}
+        moneyDetail: {},
+        mode:"전체",
+        moneyStateShow: true
     }),
     created() {
         this.userData = this.data.userData;
@@ -183,6 +185,8 @@ export default {
             this.tuneIcon = true;
             this.plusIcon = false;
             this.addSpendModeShow = false;
+            this.moneyDetailShow = false;
+            this.mode = "전체";
         },
         closeOverSpendAlarmDialog() {
             this.overSpendAlarmDialogShow = false;
@@ -298,15 +302,44 @@ export default {
         addSpendCategory() {
             console.log("add!");
         },
-        changeCalnedarMode(mode){
+        changeCalendarMode(mode){
             this.moneyDetailShow = false;
             this.calendarShow = false;
+            this.mode = mode;
             axios.post('/php/changeExpenseMode.php', {
                 'mode': mode
             }).then(response => {
                     this.monthData = {};
                     this.monthData = response.data.monthData;
                     this.calendarShow = true;
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
+        },
+        deleteDetail(data){
+            this.moneyDetailShow = false;
+            this.calendarShow = false;
+            this.moneyStateShow = false;
+            
+            axios.post('/php/deleteMoneyDetailExpense.php', data).then(response => {
+                    this.moneyDetail = {};
+                    this.moneyDetail = response.data.moneyDetail;
+                    axios.get('/php/getUserData.php')
+                        .then(response => {
+                            this.userData = {};
+                            this.monthData = {};
+                            this.userData = response.data.userData;
+                            this.monthData = response.data.monthData;
+                            this.moneyStateShow = true;
+                            this.calendarShow = true;
+                            this.moneyDetailShow = true;
+                        })
+                        .catch(error=>{
+                            if(error)
+                                console.log("실패!");
+                        })
                 })
                 .catch(error => {
                     if (error)
