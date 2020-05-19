@@ -50,7 +50,6 @@ export default {
         sepndContentWithComma: {}
     }),
     created() {
-        console.log(this.monthData);
         // 캘린더에 날짜 집어넣기
         let cal, m, index;
         cal = new calendar.Calendar();

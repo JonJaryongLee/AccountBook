@@ -133,7 +133,7 @@ export default {
         userData: {},
         monthData: {},
         moneyDetail: {},
-        mode:"전체",
+        mode: "전체",
         moneyStateShow: true
     }),
     created() {
@@ -194,19 +194,37 @@ export default {
         printMoneyDetail(date) {
             this.selectedDay = date;
             this.moneyDetailShow = false;
-            axios.post('/php/getMoneyDetail.php', {
-                    'thisYear': this.monthData.thisYear,
-                    'thisMonth': this.monthData.thisMonth,
-                    'today': date
-                }).then(response => {
-                    this.moneyDetail = {};
-                    this.moneyDetail = response.data.moneyDetail;
-                    this.moneyDetailShow = true;
-                })
-                .catch(error => {
-                    if (error)
-                        console.log("실패!");
-                });
+            if (this.mode == "전체") {
+                axios.post('/php/getMoneyDetail.php', {
+                        'thisYear': this.monthData.thisYear,
+                        'thisMonth': this.monthData.thisMonth,
+                        'today': date
+                    }).then(response => {
+                        this.moneyDetail = {};
+                        this.moneyDetail = response.data.moneyDetail;
+                        this.moneyDetailShow = true;
+                    })
+                    .catch(error => {
+                        if (error)
+                            console.log("실패!");
+                    });
+            }
+            else{
+                axios.post('/php/getMoneyDetailFromTag.php', {
+                        'thisYear': this.monthData.thisYear,
+                        'thisMonth': this.monthData.thisMonth,
+                        'today': date,
+                        'upperCategory': this.mode
+                    }).then(response => {
+                        this.moneyDetail = {};
+                        this.moneyDetail = response.data.moneyDetail;
+                        this.moneyDetailShow = true;
+                    })
+                    .catch(error => {
+                        if (error)
+                            console.log("실패!");
+                    });
+            }
         },
         addHistory(flag) {
             //this.shutDown();
@@ -273,7 +291,7 @@ export default {
                     if (error)
                         console.log("실패!");
                 });
-            
+
             this.chartModeIcon = "mdi-timelapse";
         },
         goSetting() {
@@ -302,13 +320,13 @@ export default {
         addSpendCategory() {
             console.log("add!");
         },
-        changeCalendarMode(mode){
+        changeCalendarMode(mode) {
             this.moneyDetailShow = false;
             this.calendarShow = false;
             this.mode = mode;
             axios.post('/php/changeExpenseMode.php', {
-                'mode': mode
-            }).then(response => {
+                    'mode': mode
+                }).then(response => {
                     this.monthData = {};
                     this.monthData = response.data.monthData;
                     this.calendarShow = true;
@@ -318,11 +336,11 @@ export default {
                         console.log("실패!");
                 });
         },
-        deleteDetail(data){
+        deleteDetail(data) {
             this.moneyDetailShow = false;
             this.calendarShow = false;
             this.moneyStateShow = false;
-            
+
             axios.post('/php/deleteMoneyDetailExpense.php', data).then(response => {
                     this.moneyDetail = {};
                     this.moneyDetail = response.data.moneyDetail;
@@ -336,8 +354,8 @@ export default {
                             this.calendarShow = true;
                             this.moneyDetailShow = true;
                         })
-                        .catch(error=>{
-                            if(error)
+                        .catch(error => {
+                            if (error)
                                 console.log("실패!");
                         })
                 })

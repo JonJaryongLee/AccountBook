@@ -3,10 +3,12 @@
         <div id="chartContainerInChart" v-if="chartShow">
             <fusioncharts :type="type" :width="width" :height="height" :dataFormat="dataFormat" :dataSource="dataSource" ref="fc" @dataPlotClick="onSliceClick"></fusioncharts>
         </div>
-        <div class="chartListInChart" v-for="(expenseList, index) in expenseLists" :key="index">
-            <div class="dateInChartListInChart">{{expenseList[0]}}</div>
-            <div class="contentInChartListInChart">{{expenseList[1]}}</div>
-            <div class="moneyInChartListInChart">{{expenseList[2]}}</div>
+        <div v-if="detailShow">
+            <div class="chartListInChart" v-for="(expenseList, index) in expenseLists" :key="index">
+                <div class="dateInChartListInChart">{{expenseList[0]}}</div>
+                <div class="contentInChartListInChart">{{expenseList[1]}}</div>
+                <div class="moneyInChartListInChart">{{expenseList[2]}}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -16,7 +18,7 @@ export default {
     props: ['thisMonth'],
     data: () => ({
         chartShow: false,
-
+        detailShow: false,
         type: 'pie2d',
         width: '100%',
         height: '400',
@@ -32,36 +34,43 @@ export default {
                 "theme": "fusion",
             },
             data: []
-        },
-        expenseLists: [
-            ["4/13", "택시", "4,700원"],
-            ["4/22", "버스", "1,500원"]
-        ]
+        }
     }),
-    created(){
+    created() {
         axios.post('/php/getSpendChartData.php', {
-            'month':this.thisMonth,
-            'tag':'생활비' 
-        }).then(response => {
-                    this.dataSource.data=response.data;
-                    this.chartShow = true;
+                'month': this.thisMonth,
+                'tag': '생활비'
+            }).then(response => {
+                this.dataSource.data = response.data;
+                this.chartShow = true;
+            })
+            .catch(error => {
+                if (error)
+                    console.log("실패!");
+            });
+    },
+    methods: {
+        onSliceClick(e) {
+            this.detailShow = false;
+            let label = e.data.categoryLabel;
+            axios.post('/php/getSpendChartDataDetail.php', {
+                    'month': this.thisMonth,
+                    'tag': "생활비",
+                    'minorTag': label
+                }).then(response => {
+                    this.expenseLists = response.data.expenseLists;
+                    this.detailShow = true;
                 })
                 .catch(error => {
                     if (error)
                         console.log("실패!");
                 });
-    },
-    methods: {
-        onSliceClick(e) {
-            let label = e.data.categoryLabel;
-            console.log(label);
-            // 해당 태그에 해당되는 내역만 출력한다.
         }
     }
 }
 </script>
 <style>
-#chartContainerInChart{
+#chartContainerInChart {
     border-bottom: 2px solid gray;
 }
 

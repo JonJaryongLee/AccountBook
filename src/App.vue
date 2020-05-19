@@ -4,6 +4,8 @@
             <Main v-if="mainShow" :data="data" />
             <Login v-if="loginShow" @login="login" @signUpDataRegInLoginVue="signUpDataRegInLoginVue" @setIDPWUserName="setIDPWUserName" />
             <SignUpUserSet v-if="signUpUserSetShow" @goMain="goMain" @saveSpendFixedList="saveSpendFixedList" @propertySet="propertySet" :userName="userName"/>
+
+            <calendarIncome v-if="calendarIncomeShow"/>
         </v-content>
     </v-app>
 </template>
@@ -12,6 +14,8 @@ import Main from './components/Main.vue';
 import Login from './components/login/login.vue';
 
 import SignUpUserSet from './components/login/newUserSet/setUserProperty.vue';
+import calendarIncome from './components/calendar/calendarIncome.vue'
+
 import axios from 'axios'
 
 
@@ -21,12 +25,15 @@ export default {
     components: {
         Main,
         Login,
-        SignUpUserSet
+        SignUpUserSet,
+        calendarIncome
     },
     data: () => ({
         loginShow: true,
         mainShow: false,
         signUpUserSetShow: false,
+        calendarIncomeShow: false,
+
         id: "",
         pw: "",
         userName: "",

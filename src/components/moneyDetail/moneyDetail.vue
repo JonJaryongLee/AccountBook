@@ -10,7 +10,7 @@
             <div class="moneyDetailContent body-2">{{moneyDetail.moneyDetailContentData[moneyDetailIndex-1]}}</div>
             <div class="moneyDetailMoney subtitle-1" ref="moneyDetailMoney">{{moneyDetailMoneyDataComma[moneyDetailIndex-1][0]}}원</div>
         </div>
-        <div class="plusBtnContainer">
+        <div class="plusBtnContainer" v-if="mode=='전체'">
             <v-speed-dial v-model="fab" :direction="direction" :open-on-hover="hover" :transition="transition">
                 <template v-slot:activator>
                     <v-btn class="plus_icon mx-2" v-model="fab" dark color="indigo" fab>
