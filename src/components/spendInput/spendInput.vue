@@ -28,6 +28,7 @@
 <script>
 import axios from 'axios'
 export default {
+    props: ['inputFlag'],
     data: () => ({
         selectedCategoryName: "내역",
         userInputMoney: null,
@@ -35,11 +36,13 @@ export default {
         iconShow: false,
         mode: 'upper',
         lowerCategoryShow: false,
-        content: "상세내역을 입력해주세요"
+        content: "상세내역을 입력해주세요",
+        payType: '현금'
     }),
     created() {
         axios.post('/php/getCategory.php', {
-                'mode': 'upper'
+                'mode': this.inputFlag,
+                'category': this.mode
             }).then(response => {
                 this.iconNames = response.data.iconNames;
                 this.iconShow = true;
@@ -51,13 +54,12 @@ export default {
     },
     methods: {
         iconSelect(name) {
-            this.selectedCategoryName = name;
-            if (this.mode == "upper") {
-                this.mode = 'lower';
+            if (this.mode=='upper') {
+                this.selectedCategoryName = name;
                 this.iconShow = false;
-                this.lowerCategoryShow = true;
                 axios.post('/php/getCategory.php', {
-                        'mode': name
+                        'mode': this.inputFlag,
+                        'category': this.selectedCategoryName
                     }).then(response => {
                         this.iconNames = [];
                         this.iconNames = response.data.iconNames;
@@ -67,23 +69,30 @@ export default {
                         if (error)
                             console.log("실패!");
                     });
+                this.mode="lower";
+            }
+            else if (this.mode=="lower"){
+                this.selectedCategoryName = name;
+                this.lowerCategoryShow = true;
             }
         },
         numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         },
         dialogOpen() {
-            if (this.content == "" || this.userInputMoney==null)
+            if (this.content == "" || this.userInputMoney == null)
                 return;
             this.dialogShow = true;
         },
         registerSpend(payType) {
+            this.payType=payType;
             this.dialogShow = false;
             this.$emit('registerSpend', {
                 'money': Number(this.userInputMoney),
                 'category': this.selectedCategoryName,
                 'content': this.content,
-                'payType': payType
+                'cashOrCard': this.payType,
+                'mode': this.inputFlag
             });
         },
         contentReset() {

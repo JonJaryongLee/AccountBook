@@ -7,7 +7,7 @@
                         <span>전체</span>
                         <v-icon>mdi-calendar-month-outline</v-icon>
                     </v-btn>
-                    <v-btn>
+                    <v-btn @click="changeCalendarToIncomeMode">
                         <span>수입</span>
                         <v-icon>mdi-purse-outline</v-icon>
                     </v-btn>
@@ -49,6 +49,9 @@ export default {
         },
         goMain(){
             this.$emit('goMain');
+        },
+        changeCalendarToIncomeMode(){
+            this.$emit('changeCalendarToIncomeMode');
         }
     }
 }

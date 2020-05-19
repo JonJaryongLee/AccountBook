@@ -55,7 +55,8 @@
                 </moneyDetail>
             </div>
         </div>
-        <spendInput v-if="spendInputShow" @registerSpend="registerSpend"></spendInput>
+        <spendInput v-if="spendInputShow" @registerSpend="registerSpend" :inputFlag="inputFlag"></spendInput>
+        <incomeCalendar v-if="incomeCalendarShow"></incomeCalendar>
         <chart v-if="chartShow" :thisMonth="monthData.thisMonth"></chart>
         <chartUserType v-if="chartUserTypeShow" :thisMonth="monthData.thisMonth"></chartUserType>
         <goals v-if="goalsShow"></goals>
@@ -66,7 +67,7 @@
         <expenseCategorySet v-if="expenseCategorySetShow" @setSpendMode="setSpendMode"></expenseCategorySet>
         <goalSet v-if="goalSetShow"></goalSet>
         <addSpendMode v-if="addSpendModeShow"></addSpendMode>
-        <appFooter @goSetting="goSetting" @goMain="goMain" @changeCalendarMode="changeCalendarMode"></appFooter>
+        <appFooter @goSetting="goSetting" @goMain="goMain" @changeCalendarMode="changeCalendarMode" @changeCalendarToIncomeMode="changeCalendarToIncomeMode"></appFooter>
         <!-- 생활비 초과 알람 -->
         <div>
             <v-dialog v-model="overSpendAlarmDialogShow" width="200">
@@ -105,6 +106,8 @@ import incomeCategorySet from "./setting/settingChildren/incomeCategorySet.vue"
 import expenseCategorySet from "./setting/settingChildren/expenseCategorySet.vue"
 import goalSet from "./setting/settingChildren/goalSet.vue"
 import addSpendMode from "./setting/settingChildren/addSpendMode.vue"
+import incomeCalendar from "./calendar/calendarIncome.vue"
+
 export default {
     props: ['data'],
     data: () => ({
@@ -134,7 +137,8 @@ export default {
         monthData: {},
         moneyDetail: {},
         mode: "전체",
-        moneyStateShow: true
+        moneyStateShow: true,
+        incomeCalendarShow: false
     }),
     created() {
         this.userData = this.data.userData;
@@ -155,7 +159,8 @@ export default {
         'incomeCategorySet': incomeCategorySet,
         'expenseCategorySet': expenseCategorySet,
         'goalSet': goalSet,
-        'addSpendMode': addSpendMode
+        'addSpendMode': addSpendMode,
+        'incomeCalendar': incomeCalendar
     },
     methods: {
         // axios로 calendar에서 moneyDetail 받아올 수 있으면 추후 아래로 고칠 것
@@ -187,6 +192,7 @@ export default {
             this.addSpendModeShow = false;
             this.moneyDetailShow = false;
             this.mode = "전체";
+            this.incomeCalendarShow = false;
         },
         closeOverSpendAlarmDialog() {
             this.overSpendAlarmDialogShow = false;
@@ -226,28 +232,11 @@ export default {
                     });
             }
         },
-        addHistory(flag) {
-            //this.shutDown();
-            console.log(flag);
-            //this.spendInputShow = true;
-            //this.chartModeIcon = "mdi-arrow-left";
-        },
-
-        //추후 서버에서 받은 변수 추가할 것
-        registerSpend(receivedData) {
-            receivedData.thisYear = this.monthData.thisYear;
-            receivedData.thisMonth = this.monthData.thisMonth;
-            receivedData.today = this.selectedDay;
-            axios.post('/php/setMoneyDetailExpense.php', receivedData).then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    if (error)
-                        console.log("실패!");
-                });
+        addHistory(inputFlag) {
+            this.inputFlag = inputFlag;
             this.shutDown();
-            this.mainScreenShow = true;
-            this.chartModeIcon = "mdi-timelapse"
+            this.spendInputShow = true;
+            this.chartModeIcon = "mdi-arrow-left";
         },
         goUserChart() {
             this.drawer = !this.drawer;
@@ -363,7 +352,47 @@ export default {
                     if (error)
                         console.log("실패!");
                 });
-        }
+        },
+        changeCalendarToIncomeMode(){
+            this.shutDown();
+            this.incomeCalendarShow = true;
+        },
+
+        //추후 서버에서 받은 변수 추가할 것
+        registerSpend(receivedData) {
+            this.moneyDetailShow = false;
+            this.calendarShow = false;
+            this.moneyStateShow = false;
+
+            receivedData.thisYear = this.monthData.thisYear;
+            receivedData.thisMonth = this.monthData.thisMonth;
+            receivedData.today = this.selectedDay;
+            axios.post('/php/setMoneyDetail.php', receivedData).then(response => {
+                    this.moneyDetail={};
+                    this.moneyDetail=response.data.moneyDetail;
+                    axios.get('/php/getUserData.php')
+                        .then(response => {
+                            this.shutDown();
+                            this.userData = {};
+                            this.monthData = {};
+                            this.userData = response.data.userData;
+                            this.monthData = response.data.monthData;
+                            this.moneyStateShow = true;
+                            this.calendarShow = true;
+                            this.moneyDetailShow = true;
+                            this.mainScreenShow = true;
+                            this.chartModeIcon = "mdi-timelapse"
+                        })
+                        .catch(error => {
+                            if (error)
+                                console.log("실패!");
+                        })
+                })
+                .catch(error => {
+                    if (error)
+                        console.log("실패!");
+                });
+        },
     }
 }
 </script>

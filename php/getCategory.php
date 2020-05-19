@@ -7,32 +7,47 @@ require_once("dbconfig.php");
 $_POST = JSON_DECODE(file_get_contents("php://input"), true);
 
 $mode = $_POST["mode"];
- 
-$iconNames = array(); // iconNames 배열          
-$categoryName = array(); //categoryName 배열 
+$category = $_POST["category"]; 
 
-       
-        if($mode== "upper"){
 
-            $sql = mysqli_query($db, "SELECT * FROM category");
 
-            while($row = mysqli_fetch_array($sql)) { 
-            array_push($categoryName, array($row[0],$row[2],$row[1])); 
-            }
+$iconNames = array(); // iconNames 배열         
+$categoryDetailData = array();
 
-            $iconNames['iconNames'] = $categoryName;
-
-        }else{
-           
-            $sql = mysqli_query($db, "SELECT * FROM under_category WHERE Category_name = '".$mode."' ");
+if($mode == "수입" and $category == "upper"){
+    $sql = mysqli_query($db, "SELECT * FROM `category` WHERE Category_name = '수입'");
 
             while($row = mysqli_fetch_array($sql)) { 
-            array_push($categoryName, array($row[0],$row[3],$row[2])); 
+            array_push($categoryDetailData, array($row[0],$row[2],$row[1])); 
             }
 
-            $iconNames['iconNames'] = $categoryName;
+            $iconNames['iconNames'] = $categoryDetailData;
+}
+
+else if($mode == "지출" and $category == "upper"){
+    $sql = mysqli_query($db, "SELECT * FROM `category` WHERE Category_name != '수입'");
+
+            while($row = mysqli_fetch_array($sql)) { 
+            array_push($categoryDetailData, array($row[0],$row[2],$row[1])); 
+            }
+
+            $iconNames['iconNames'] = $categoryDetailData;
+}
+
        
-        }
+else if($category !== "upper"){
+    $sql = mysqli_query($db, "SELECT * FROM under_category WHERE Category_name = '".$category."' ");
+
+            while($row = mysqli_fetch_array($sql)) { 
+            array_push($categoryDetailData, array($row[0],$row[3],$row[2])); 
+            }
+
+            $iconNames['iconNames'] = $categoryDetailData;
+} 
+
+else{
+    echo "post 값 에러~ !!";
+}
 
 
         echo json_encode($iconNames,JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);

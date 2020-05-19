@@ -18,10 +18,10 @@
                         <v-icon v-else>mdi-plus</v-icon>
                     </v-btn>
                 </template>
-                <v-btn fab dark small color="red" @click="addHistory('expense')">
+                <v-btn fab dark small color="red" @click="addHistory('지출')">
                     <v-icon>mdi-minus</v-icon>
                 </v-btn>
-                <v-btn fab dark small color="green" @click="addHistory('income')">
+                <v-btn fab dark small color="green" @click="addHistory('수입')">
                     <v-icon>mdi-plus</v-icon>
                 </v-btn>
             </v-speed-dial>
