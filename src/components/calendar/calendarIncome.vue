@@ -16,28 +16,18 @@
                 <v-card>
                     <v-card-title>수입 추가</v-card-title>
                     <v-card-text>
-                        <div class="radioBox">
-                            <v-radio-group v-model="radio">
-                                <v-radio label="일급" @click="radioClick(0)"></v-radio>
-                                <v-radio label="시급" @click="radioClick(1)"></v-radio>
-                            </v-radio-group>
-                        </div>
                         <div class="inputBoxContainer">
                             <div class="inputBox">
-                                <input class="input" v-model="userInputMoney" type='number' :disabled="numberDisable">
-                            </div>
-                            <div class="inputBox">
-                                <input class="input" v-model="userInputTime" type="number" :disabled="timeDisable">
+                                <input class="input" v-model="userInputTime" type="number">
                             </div>
                         </div>
                         <div class="tagContainer">
-                            <div>원</div>
                             <div class="timeTag">시간</div>
                         </div>
                     </v-card-text>
                     <v-divider></v-divider>
                     <div class="btnContainer">
-                        <v-btn class="addBtn" color="primary">추가</v-btn>
+                        <v-btn class="addBtn" color="primary" @click="setIncomeData">추가</v-btn>
                         <v-btn color="error" @click="close">취소</v-btn>
                     </div>
                 </v-card>
@@ -46,39 +36,20 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 import calendar from 'calendar'
 export default {
+    props: ['monthData'],
     data: () => ({
         days: ['일', '월', '화', '수', '목', '금', '토'],
         dateOfThisMonth: [],
-        monthData: {
-            thisYear: 2020,
-            thisMonth: 5
-        },
-        dateIncomeMoneyDetailNumArray: [
-            20000, null, null, 80000, null,
-            null, null, null, null, null,
-            null, null, null, null, null,
-            null, null, null, 13000, null,
-            null, null, null, null, null,
-            null, null, null, null, null, 70000
-        ],
-        dateIncomeTimeDetailNumArray: [
-            1, null, null, 3, null,
-            null, null, null, null, null,
-            null, null, null, null, null,
-            null, null, null, 2.5, null,
-            null, null, null, null, null,
-            null, null, null, null, null, 1
-        ],
+        dateIncomeMoneyDetailNumArray: [],
+        dateIncomeTimeDetailNumArray: [],
         totalIncome: 3000000,
         dialogShow: false,
         selectedNumber: -1,
-        radio: 0,
         userInputTime: null,
-        userInputMoney: null,
-        numberDisable: false,
-        timeDisable: true
+        numberDisable: false
     }),
     methods: {
         selectDay(number) {
@@ -87,25 +58,37 @@ export default {
             this.selectedNumber = number;
             this.dialogShow = true;
         },
-        radioClick(v) {
-            this.radio = v;
-            if(v == 0){
-                this.timeDisable=true;
-                this.numberDisable=false;
-                this.userInputTime = null;
-            }
-            else{
-                this.timeDisable=false;
-                this.numberDisable=true;
-                this.userInputMoney = null;
-            }
-        },
         close() {
             this.dialogShow = false;
-            this.radio = 0;
         },
         numberWithCommas(x) {
             return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
+        setIncomeData(){
+            axios.post('/php/setIncomeData.php', {
+                'thisYear': this.monthData.thisYear,
+                'thisMonth': this.monthData.thisMonth,
+                'today': this.selectedNumber,
+                'time': this.userInputTime
+            }).then(response => {
+                this.dateIncomeMoneyDetailNumArray = response.data.dateIncomeMoneyDetailNumArray;
+                this.dateIncomeTimeDetailNumArray = response.data.dateIncomeTimeDetailNumArray;
+                this.totalIncome = response.data.totalIncome;
+                this.totalIncome = this.numberWithCommas(this.totalIncome);
+                for (let i = this.dateIncomeMoneyDetailNumArray.length - 1; i >= 0; i--) {
+                    if (this.dateIncomeMoneyDetailNumArray[i])
+                        this.dateIncomeMoneyDetailNumArray[i] = this.numberWithCommas(this.dateIncomeMoneyDetailNumArray[i]);
+                }
+                for (let i = this.dateIncomeTimeDetailNumArray.length - 1; i >= 0; i--) {
+                    if (this.dateIncomeTimeDetailNumArray[i] != null)
+                        this.dateIncomeTimeDetailNumArray[i] = this.dateIncomeTimeDetailNumArray[i].toString() + "시간";
+                }
+                this.dialogShow=false;
+            })
+            .catch(error => {
+                if (error)
+                    console.log(error);
+            });
         }
     },
     created() {
@@ -122,37 +105,50 @@ export default {
             if (this.dateOfThisMonth[i] == 0)
                 this.dateOfThisMonth[i] = null
         }
-        this.totalIncome = this.numberWithCommas(this.totalIncome);
-        for (let i = this.dateIncomeMoneyDetailNumArray.length - 1; i >= 0; i--) {
-            if(this.dateIncomeMoneyDetailNumArray[i])
-            this.dateIncomeMoneyDetailNumArray[i] = this.numberWithCommas(this.dateIncomeMoneyDetailNumArray[i]);
-        }
-        for (let i = this.dateIncomeTimeDetailNumArray.length - 1; i >= 0; i--) {
-            if(this.dateIncomeTimeDetailNumArray[i]!=null)
-                this.dateIncomeTimeDetailNumArray[i]= this.dateIncomeTimeDetailNumArray[i].toString()+"시간";
-        }
+
     },
-    mounted(){
-        this.$refs.day[0].style.color="red";
-        this.$refs.day[6].style.color="blue";
+    mounted() {
+        this.$refs.day[0].style.color = "red";
+        this.$refs.day[6].style.color = "blue";
 
-        this.$refs.number[0].style.color="red";
-        this.$refs.number[7].style.color="red";
-        this.$refs.number[14].style.color="red";
-        this.$refs.number[21].style.color="red";
-        if(this.$refs.number[28])
-            this.$refs.number[28].style.color="red";
-        if(this.$refs.number[35])
-            this.$refs.number[35].style.color="red";
+        this.$refs.number[0].style.color = "red";
+        this.$refs.number[7].style.color = "red";
+        this.$refs.number[14].style.color = "red";
+        this.$refs.number[21].style.color = "red";
+        if (this.$refs.number[28])
+            this.$refs.number[28].style.color = "red";
+        if (this.$refs.number[35])
+            this.$refs.number[35].style.color = "red";
 
-        this.$refs.number[6].style.color="blue";
-        this.$refs.number[13].style.color="blue";
-        this.$refs.number[20].style.color="blue";
-        this.$refs.number[27].style.color="blue";
-        if(this.$refs.number[34])
-            this.$refs.number[34].style.color="blue";
-        if(this.$refs.number[41])
-            this.$refs.number[41].style.color="blue";
+        this.$refs.number[6].style.color = "blue";
+        this.$refs.number[13].style.color = "blue";
+        this.$refs.number[20].style.color = "blue";
+        this.$refs.number[27].style.color = "blue";
+        if (this.$refs.number[34])
+            this.$refs.number[34].style.color = "blue";
+        if (this.$refs.number[41])
+            this.$refs.number[41].style.color = "blue";
+        axios.post('/php/getIncomeData.php', {
+                'thisYear': this.monthData.thisYear,
+                'thisMonth': this.monthData.thisMonth
+            }).then(response => {
+                this.dateIncomeMoneyDetailNumArray = response.data.dateIncomeMoneyDetailNumArray;
+                this.dateIncomeTimeDetailNumArray = response.data.dateIncomeTimeDetailNumArray;
+                this.totalIncome = response.data.totalIncome;
+                this.totalIncome = this.numberWithCommas(this.totalIncome);
+                for (let i = this.dateIncomeMoneyDetailNumArray.length - 1; i >= 0; i--) {
+                    if (this.dateIncomeMoneyDetailNumArray[i])
+                        this.dateIncomeMoneyDetailNumArray[i] = this.numberWithCommas(this.dateIncomeMoneyDetailNumArray[i]);
+                }
+                for (let i = this.dateIncomeTimeDetailNumArray.length - 1; i >= 0; i--) {
+                    if (this.dateIncomeTimeDetailNumArray[i] != null)
+                        this.dateIncomeTimeDetailNumArray[i] = this.dateIncomeTimeDetailNumArray[i].toString() + "시간";
+                }
+            })
+            .catch(error => {
+                if (error)
+                    console.log(error);
+            });
     }
 }
 </script>
@@ -179,6 +175,7 @@ export default {
 
 .moneyPart {
     height: 20px;
+    font-size: 0.7rem;
     color: #673AB7;
 }
 
@@ -210,39 +207,35 @@ export default {
     margin-right: 10px;
 }
 
-.radioBox{
+
+
+.inputBoxContainer {
     display: inline-block;
     vertical-align: top;
+    width: 65%;
 }
 
-.inputBoxContainer{
-    display: inline-block;
-    vertical-align: top;
-    width:65%;
-}
-
-.inputBox{
-    border:1px solid grey;
+.inputBox {
+    border: 1px solid grey;
     border-radius: 5px;
     margin: 10px;
     position: relative;
-    top:8px;
+    top: 8px;
 
 }
 
-.tagContainer{
+.tagContainer {
+    top:20px;
     position: relative;
     display: inline-block;
     vertical-align: top;
-    top: 20px;
 }
 
-.timeTag{
+.timeTag {
     position: relative;
-    top:10px;
 }
 
-.input{
+.input {
     text-align: right;
     width: 95%;
 }

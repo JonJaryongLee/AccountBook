@@ -56,7 +56,7 @@
             </div>
         </div>
         <spendInput v-if="spendInputShow" @registerSpend="registerSpend" :inputFlag="inputFlag"></spendInput>
-        <incomeCalendar v-if="incomeCalendarShow"></incomeCalendar>
+        <incomeCalendar v-if="incomeCalendarShow" :monthData="monthData"></incomeCalendar>
         <chart v-if="chartShow" :thisMonth="monthData.thisMonth"></chart>
         <chartUserType v-if="chartUserTypeShow" :thisMonth="monthData.thisMonth"></chartUserType>
         <goals v-if="goalsShow"></goals>
