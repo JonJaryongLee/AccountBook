@@ -35,7 +35,7 @@ export default {
                 })
                 .catch(error => {
                     if (error)
-                        console.log("실패!");
+                        console.log(error);
                 });
     }
 }
