@@ -21,11 +21,11 @@
                     </v-list-item>
                 </v-list-item-group>
             </v-list>
-            <div>추가버튼 동작 안함</div>
+<!--             <div>추가버튼 동작 안함</div>
             <div>axios통신하기</div>
             <div>리스트 드래그? 가능하면 할 것</div>
             <div>확인버튼 없음</div>
-            <div>리스트 삭제버튼 없음</div>
+            <div>리스트 삭제버튼 없음</div> -->
         </v-card>
     </div>
 </template>
