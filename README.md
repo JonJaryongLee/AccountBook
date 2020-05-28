@@ -131,5 +131,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 #### 서버 개발 종료.
 
 ### 5월 25일 - 
-#### 최종보고 작성중
-#### spendInput.vue 부분 작성하다 중단
+#### 클라이언트 최종보고 1차작성완료 
