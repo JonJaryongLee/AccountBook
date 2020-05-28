@@ -129,3 +129,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ### 5월 21일 작업내용
 #### 박수진에게 배부했던 2가지 php파일 적용완료.
 #### 서버 개발 종료.
+
+### 5월 25일 - 
+#### 최종보고 작성중
+#### spendInput.vue 부분 작성하다 중단
