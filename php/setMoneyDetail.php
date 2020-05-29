@@ -45,13 +45,22 @@ $date = $year.$bar.$month.$bar.$day;
 
 
 if($mode == "지출"){//모드가 수입이면 수입테이블에 삽입
-  mysqli_query($db,"INSERT INTO spend(ID, Category_name, Category_Detail, Content, Use_division, Date_d, price, Division) VALUES('".$_SESSION["ses_username"]."', '".$Category_name."', '".$category."', '".$content."', '".$cashOrCard."', '".$date."', '$money', '-' )");
+  
+  mysqli_query($db,"INSERT INTO spend(ID, Category_name, Category_Detail, Content, Use_division, Date_d, price, Division) 
+    VALUES('{$_SESSION["ses_username"]}', '".$Category_name."', '".$category."', '".$content."', '".$cashOrCard."', '".$date."', '$money', '-' )");
+
 }
 else if($mode == "수입" and ($category == "일급" or $category == "주급" or $category == "월급")){
-  mysqli_query($db,"INSERT INTO `work_income`(`ID`, `Category_Detail`, `Content`, `Date_d`, `Time`, `Division`, `Category_name`) VALUES('".$_SESSION["ses_username"]."', '".$category."', '".$content."', '".$date."', '$money', '+', '".$Category_name."' )");
+ 
+  mysqli_query($db,"INSERT INTO `work_income`(`ID`, `Category_Detail`, `Content`, `Date_d`, `Time`, `Division`, `Category_name`) 
+    VALUES('{$_SESSION["ses_username"]}', '".$category."', '".$content."', '".$date."', '$money', '+', '".$Category_name."' )");
+
 }//노동수입 테이블  
 else if($mode == "수입" and $category !== "일급" and $category !== "주급" and $category !== "월급"){
-  mysqli_query($db,"INSERT INTO income(ID, Category_Detail, Content, price, Date_d, Division, Category_name) VALUES('".$_SESSION["ses_username"]."', '".$category."', '".$content."', '$money', '".$date."', '+', '".$Category_name."' )");
+ 
+  mysqli_query($db,"INSERT INTO income(ID, Category_Detail, Content, price, Date_d, Division, Category_name) 
+    VALUES('{$_SESSION["ses_username"]}', '".$category."', '".$content."', '$money', '".$date."', '+', '".$Category_name."' )");
+
 }//수입테이블
 else{
     echo "error";
@@ -59,13 +68,13 @@ else{
 
 $flag = (boolean)false;  // flag값 정의 
 
-$res_Sum = mysqli_query($db, "SELECT sum(price) from spend where id = '".$_SESSION["ses_username"]."' and Category_name = '생활비'");
+$res_Sum = mysqli_query($db, "SELECT sum(price) from spend where id = '{$_SESSION["ses_username"]}' and Category_name = '생활비'");
 $row = mysqli_fetch_array($res_Sum);
 $SumOfliving = $row[0]; // 사용자의 생활비 총액 
 
 
 
-$res_Sum = mysqli_query($db, "SELECT Sex, Age FROM user where id='".$_SESSION["ses_username"]."'");
+$res_Sum = mysqli_query($db, "SELECT Sex, Age FROM user where id='{$_SESSION["ses_username"]}'");
 $row = mysqli_fetch_array($res_Sum);
 $Sex = $row[0]; 
 $Age = $row[1]; 
@@ -106,7 +115,28 @@ $moneyDetail1 = new mDetail;//객체생성
 $moneyDetail1 -> danger = (boolean)$flag;
 
             
-$res1 = mysqli_query($db, "SELECT COUNT(Content) FROM (SELECT ID, Category_Detail, price, Date_d, Division, Content FROM spend WHERE ID='".$_SESSION["ses_username"]."' and (SUBSTRING(Date_d, 1, 10) = '$date') UNION all SELECT user.ID, Category_Detail, (user.Change_income*work_income.Time) as price, Date_d, Division, Content FROM work_income, user where work_income.ID = '".$_SESSION["ses_username"]."' and user.ID = '".$_SESSION["ses_username"]."' and (SUBSTRING(Date_d, 1, 10)) = '$date'UNION all SELECT ID, Category_Detail, price, Date_d, Division, Content FROM income WHERE ID='".$_SESSION["ses_username"]."' and (SUBSTRING(Date_d, 1, 10) = '$date'))a INNER JOIN under_category ON a.Category_Detail= under_category.Category_Detail");
+$res1 = mysqli_query($db, "SELECT COUNT(Content) FROM 
+  (SELECT ID, Category_Detail, price, Date_d, Division, Content 
+  FROM spend 
+  WHERE ID='{$_SESSION["ses_username"]}' and (SUBSTRING(Date_d, 1, 10) = '$date') 
+
+  UNION all 
+
+  SELECT user.ID, Category_Detail, (user.Change_income*work_income.Time) as price, Date_d, Division, Content 
+  FROM work_income, user 
+
+  where work_income.ID = '{$_SESSION["ses_username"]}' 
+  and user.ID = '{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10)) = '$date'
+
+  UNION all 
+
+  SELECT ID, Category_Detail, price, Date_d, Division, Content 
+  FROM income 
+  WHERE ID='{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10) = '$date'))a 
+  INNER JOIN under_category 
+  ON a.Category_Detail= under_category.Category_Detail");
 
   $row = mysqli_fetch_array($res1);
 
@@ -114,7 +144,27 @@ $res1 = mysqli_query($db, "SELECT COUNT(Content) FROM (SELECT ID, Category_Detai
   $moneyDetail1 -> moneyDetailsNum = (int)$countNum;
 
 
-$res2 = mysqli_query($db, "SELECT * FROM (SELECT ID, Category_Detail, price, Date_d, Division, Content FROM spend WHERE ID='".$_SESSION["ses_username"]."' and (SUBSTRING(Date_d, 1, 10) = '$date') UNION all SELECT user.ID, Category_Detail, (user.Change_income*work_income.Time) as price, Date_d, Division, Content FROM work_income, user where work_income.ID = '".$_SESSION["ses_username"]."' and user.ID = '".$_SESSION["ses_username"]."' and (SUBSTRING(Date_d, 1, 10)) = '$date'UNION all SELECT ID, Category_Detail, price, Date_d, Division, Content FROM income WHERE ID='".$_SESSION["ses_username"]."' and (SUBSTRING(Date_d, 1, 10) = '$date'))a INNER JOIN under_category ON a.Category_Detail= under_category.Category_Detail");
+$res2 = mysqli_query($db, "SELECT * FROM 
+  (SELECT ID, Category_Detail, price, Date_d, Division, Content 
+  FROM spend 
+  WHERE ID='{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10) = '$date') 
+
+  UNION all 
+
+  SELECT user.ID, Category_Detail, (user.Change_income*work_income.Time) as price, Date_d, Division, Content 
+  FROM work_income, user 
+  where work_income.ID = '{$_SESSION["ses_username"]}' and user.ID = '{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10)) = '$date'
+
+  UNION all 
+
+  SELECT ID, Category_Detail, price, Date_d, Division, Content 
+  FROM income 
+  WHERE ID='{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10) = '$date'))a 
+  INNER JOIN under_category 
+  ON a.Category_Detail= under_category.Category_Detail");
 
 
 $moneyDetailTagData = array();

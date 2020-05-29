@@ -64,5 +64,3 @@ $_POST = JSON_DECODE(file_get_contents("php://input"), true);
 mysqli_close($db);
  
 ?>
-
-

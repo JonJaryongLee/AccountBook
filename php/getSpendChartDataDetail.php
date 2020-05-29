@@ -13,7 +13,12 @@ $category_Detail = $_POST["minorTag"];
 
 
 
-$sql = mysqli_query($db, "SELECT month(Date_d), day(Date_d), Content, price from spend where id = '{$_SESSION["ses_username"]}' and Category_Detail= '".$category_Detail."' and month(Date_d) = '$month'");
+$sql = mysqli_query($db, 
+	"SELECT month(Date_d), day(Date_d), Content, price 
+	from spend 
+	where id = '{$_SESSION["ses_username"]}' 
+	and Category_Detail= '".$category_Detail."' 
+	and month(Date_d) = '$month'");
 
 $expenseLists = array();
 

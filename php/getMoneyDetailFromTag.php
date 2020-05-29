@@ -38,7 +38,29 @@ class mDetail{
 
 $moneyDetail1 = new mDetail;//객체생성 
             
-$res1 = mysqli_query($db, "SELECT COUNT(Content) from(SELECT ID, Category_Detail, price, Date_d, Division, Content FROM spend WHERE ID='{$_SESSION["ses_username"]}' and (SUBSTRING(Date_d, 1, 10) = '$date') UNION all SELECT user.ID, Category_Detail, (user.Change_income*work_income.Time) as price, Date_d, Division, Content FROM work_income, user where work_income.ID = '{$_SESSION["ses_username"]}' and user.ID = '{$_SESSION["ses_username"]}' and (SUBSTRING(Date_d, 1, 10)) = '$date'UNION all SELECT ID, Category_Detail, price, Date_d, Division, Content FROM income WHERE ID='{$_SESSION["ses_username"]}' and (SUBSTRING(Date_d, 1, 10) = '$date'))a INNER JOIN under_category ON a.Category_Detail= under_category.Category_Detail where Category_name='".$upperCategory."'");
+$res1 = mysqli_query($db, "SELECT COUNT(Content) 
+  from
+  (SELECT ID, Category_Detail, price, Date_d, Division, Content 
+  FROM spend 
+  WHERE ID='{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10) = '$date') 
+
+  UNION all 
+
+  SELECT user.ID, Category_Detail, (user.Change_income*work_income.Time) as price, Date_d, Division, Content 
+  FROM work_income, user 
+  where work_income.ID = '{$_SESSION["ses_username"]}' 
+  and user.ID = '{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10)) = '$date'
+
+  UNION all 
+
+  SELECT ID, Category_Detail, price, Date_d, Division, Content 
+  FROM income 
+  WHERE ID='{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10) = '$date'))a 
+
+  INNER JOIN under_category ON a.Category_Detail= under_category.Category_Detail where Category_name='".$upperCategory."'");
 
   $row = mysqli_fetch_array($res1);
 
@@ -46,7 +68,27 @@ $res1 = mysqli_query($db, "SELECT COUNT(Content) from(SELECT ID, Category_Detail
   $moneyDetail1 -> moneyDetailsNum = (int)$countNum;
 
 
-$res2 = mysqli_query($db, "SELECT * FROM (SELECT ID, Category_Detail, price, Date_d, Division, Content FROM spend WHERE ID='{$_SESSION["ses_username"]}' and (SUBSTRING(Date_d, 1, 10) = '$date') UNION all SELECT user.ID, Category_Detail, (user.Change_income*work_income.Time) as price, Date_d, Division, Content FROM work_income, user where work_income.ID = '{$_SESSION["ses_username"]}' and user.ID = '{$_SESSION["ses_username"]}' and (SUBSTRING(Date_d, 1, 10)) = '$date'UNION all SELECT ID, Category_Detail, price, Date_d, Division, Content FROM income WHERE ID='{$_SESSION["ses_username"]}' and (SUBSTRING(Date_d, 1, 10) = '$date'))a INNER JOIN under_category ON a.Category_Detail= under_category.Category_Detail where Category_name='".$upperCategory."'");
+$res2 = mysqli_query($db, "SELECT * FROM 
+  (SELECT ID, Category_Detail, price, Date_d, Division, Content 
+  FROM spend WHERE ID='{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10) = '$date') 
+
+  UNION all 
+
+  SELECT user.ID, Category_Detail, (user.Change_income*work_income.Time) as price, Date_d, Division, Content 
+  FROM work_income, user 
+  where work_income.ID = '{$_SESSION["ses_username"]}' 
+  and user.ID = '{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10)) = '$date'
+
+  UNION all 
+
+  SELECT ID, Category_Detail, price, Date_d, Division, Content 
+  FROM income 
+  WHERE ID='{$_SESSION["ses_username"]}' 
+  and (SUBSTRING(Date_d, 1, 10) = '$date'))a 
+
+  INNER JOIN under_category ON a.Category_Detail= under_category.Category_Detail where Category_name='".$upperCategory."'");
 
 
 $moneyDetailTagData = array();
@@ -103,7 +145,5 @@ $moneyDetail["moneyDetail"] = $moneyDetail1;
 
 echo json_encode($moneyDetail,JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
 mysqli_close($db);
-
-
 
 ?>

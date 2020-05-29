@@ -24,7 +24,5 @@ $memberId = $_POST["id"];
 
 
 mysqli_close($db);
- 
+ //총 1700줄 
 ?>
-
-

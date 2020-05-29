@@ -23,7 +23,11 @@ $mode = $_POST["mode"];
 
 
 
-$res = mysqli_query($db, "SELECT SUBSTRING(Date_d, 9, 2) as Date_d, sum(price) as price, max(Division) as Division, max(Category_name) as Category_name from spend where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) and Category_name='".$mode."' GROUP by Date_d");
+$res = mysqli_query($db, "
+  SELECT SUBSTRING(Date_d, 9, 2) as Date_d, sum(price) as price, max(Division) as Division, max(Category_name) as Category_name 
+  from spend 
+  where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) and Category_name='".$mode."' 
+  GROUP by Date_d");
 
 
 $zero = 0;

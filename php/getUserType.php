@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-
 
 require_once("dbconfig.php");
 
@@ -9,21 +6,21 @@ $_POST = JSON_DECODE(file_get_contents("php://input"), true);
 
 
 
-$sql1 = mysqli_query($db, "SELECT sum(price) as price FROM spend WHERE ID = '".$_SESSION["ses_username"]."' and Category_name = '생활비'");
+$sql1 = mysqli_query($db, "SELECT sum(price) as price 
+		FROM spend WHERE ID = '".$_SESSION["ses_username"]."' and Category_name = '생활비'");
 
 $row = mysqli_fetch_array($sql1);
 $living = $row[0];
 //생활비
 
-$sql2 = mysqli_query($db, "SELECT sum(price) as price from (select SUBSTRING(Date_d, 9, 2) as Date_d, price, Division, Content from income where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) UNION all select SUBSTRING(Date_d, 9, 2) as Date_d, (user.Change_income*work_income.Time) as price, Division, Content from work_income, user where work_income.ID = '".$_SESSION["ses_username"]."' and user.ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()))ic");
+$sql2 = mysqli_query($db, "SELECT sum(price) as price 
+		from (select SUBSTRING(Date_d, 9, 2) as Date_d, price, Division, Content 
+		from income 
+		where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) UNION all select SUBSTRING(Date_d, 9, 2) as Date_d, (user.Change_income*work_income.Time) as price, Division, Content from work_income, user where work_income.ID = '".$_SESSION["ses_username"]."' and user.ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()))ic");
 //전체수입 
 $row = mysqli_fetch_array($sql2);
 $income = $row[0];
 //생활비
-
-
-
-
 
 $cal = ($living / $income)*100;
 //수식 = (생활비 / 전체수입 )*100
@@ -51,10 +48,6 @@ $row = mysqli_fetch_array($sql3);
 $Material = $row[0];
 $Image = $row[1];
 $Text = $row[2];
-
-
-
-
 
 
 $result = array();

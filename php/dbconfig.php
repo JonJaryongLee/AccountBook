@@ -17,6 +17,5 @@ header("Content-Type:application/json");
 
     mysqli_set_charset($db,"utf8");
 // 기본 클라이언트 문자 집합 설정하기  
-
-    
+  
 ?>

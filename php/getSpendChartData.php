@@ -26,9 +26,6 @@ while($row = mysqli_fetch_array($sql)) {
 
     $data = $moneyDetailTagIcon;
 
-
-
-
 echo json_encode($data, JSON_UNESCAPED_UNICODE|JSON_NUMERIC_CHECK);
 mysqli_close($db);
 

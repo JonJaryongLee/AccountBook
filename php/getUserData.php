@@ -26,13 +26,26 @@ $_POST = JSON_DECODE(file_get_contents("php://input"), true);
             $udMonth = date("n");// date("n") = 현재 월을 숫자로 반환함 
             $userData1 -> month = (int)$udMonth;// int형으로 형변환 시킨후 속성에 추가
             
-            $res1 = mysqli_query($db, "SELECT sum(price) as price from (select SUBSTRING(Date_d, 9, 2) as Date_d, price, Division, Content from income where ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) UNION all select SUBSTRING(Date_d, 9, 2) as Date_d, (user.Change_income*work_income.Time) as price, Division, Content from work_income, user where work_income.ID = '".$_SESSION["ses_username"]."' and user.ID = '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()))ic");
+            $res1 = mysqli_query($db, "SELECT sum(price) as price 
+              from 
+              (select SUBSTRING(Date_d, 9, 2) as Date_d, price, Division, Content 
+              from income 
+              where ID = '{$_SESSION["ses_username"]}' 
+              and month(Date_d) = Month(now()) 
+
+              UNION all 
+
+              select SUBSTRING(Date_d, 9, 2) as Date_d, (user.Change_income*work_income.Time) as price, Division, Content 
+              from work_income, user 
+              where work_income.ID = '{$_SESSION["ses_username"]}' 
+              and user.ID = '{$_SESSION["ses_username"]}' 
+              and month(Date_d) = Month(now()))ic");
 
             /*re1(sql 구현과정) 총수익을 가져오는 sql 이다 . 월총수입 = 월노동수입 + 월일반수입 
             
             첫번째 select문(sum(price) as price)은 union한 테이블들의 price 값을 모두 더한것 
             
-            두번째 select문 = 월 일반수입을 구하는 것
+            두번째 select문 = 월 일반수입을 구하는 것{$_SESSION["ses_username"]}
 
             세번째 select문 = 월 노동수입을 구하는 것인데 
             노동수입 테이블에서는 금액없이 시간만 나와있기때문에 (노동수입.시간* 사용자.시급) 을 연산 하면 노동자의 수입을 금액으로 환산할수 있다 .
@@ -46,7 +59,7 @@ $_POST = JSON_DECODE(file_get_contents("php://input"), true);
 
 
 
-            $res2 = mysqli_query($db, "SELECT sum(price) from spend where ID= '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now())");//해당월 지출
+            $res2 = mysqli_query($db, "SELECT sum(price) from spend where ID= '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now())");//해당월 지출
 
             $row = mysqli_fetch_array($res2);
             $monthExpense = $row[0];
@@ -59,13 +72,13 @@ $_POST = JSON_DECODE(file_get_contents("php://input"), true);
             // 62~63 balance 부분
 
 
-            $res3 = mysqli_query($db, "SELECT sum(price) from spend where ID= '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) and Use_division='현금'");
+            $res3 = mysqli_query($db, "SELECT sum(price) from spend where ID= '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) and Use_division='현금'");
             $row = mysqli_fetch_array($res3);
             $monthCash = $row[0];
             $userData1 -> expenseTypeCash = (int)$monthCash;
             //해당월 현금 지출
 
-            $res4 = mysqli_query($db, "SELECT sum(price) from spend where ID= '".$_SESSION["ses_username"]."' and month(Date_d) = Month(now()) and Use_division='카드'");
+            $res4 = mysqli_query($db, "SELECT sum(price) from spend where ID= '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) and Use_division='카드'");
             $row = mysqli_fetch_array($res4);
             $monthCard = $row[0];
             $userData1 -> expenseTypeCard = (int)$monthCard;
@@ -89,26 +102,58 @@ $_POST = JSON_DECODE(file_get_contents("php://input"), true);
 
             $spendContent = array();
            
-$res5 = mysqli_query($db, "SELECT  Date_d, ifnull(f.i_price, 0), ifnull(f.i_Division, '+'), ifnull(f.s_price, 0), ifnull(f.s_Division, '-') from
+$res5 = mysqli_query($db, "SELECT  Date_d, ifnull(f.i_price, 0), ifnull(f.i_Division, '+'), ifnull(f.s_price, 0), ifnull(f.s_Division, '-') 
+  from
 (SELECT IFNULL(A.Date_d, B.Date_d) as Date_d, A.price as i_price, A.Division as i_Division, B.price as s_price, B.Division as s_Division
-  From
-(SELECT MAX(Date_d) Date_d, sum(price) as price, MAX(Division) Division from (select SUBSTRING(Date_d, 9, 2) as Date_d, sum((user.Change_income*work_income.Time)) as price, max(Division) Division from work_income,user where work_income.ID = '{$_SESSION["ses_username"]}' and user.ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) GROUP BY Date_d UNION ALL select SUBSTRING(Date_d, 9, 2) as Date_d, sum(price), max(Division) as a from income where ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) GROUP by Date_d) as basetable group by Date_d) as A 
+  From (SELECT MAX(Date_d) Date_d, sum(price) as price, MAX(Division) Division 
+from 
+(select SUBSTRING(Date_d, 9, 2) as Date_d, sum((user.Change_income*work_income.Time)) as price, max(Division) Division 
+from work_income,user 
+where work_income.ID = '{$_SESSION["ses_username"]}' 
+and user.ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) 
+GROUP BY Date_d 
+
+UNION ALL 
+
+select SUBSTRING(Date_d, 9, 2) as Date_d, sum(price), max(Division) as a 
+from income 
+where ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) 
+GROUP by Date_d) as basetable 
+group by Date_d) as A 
     
     LEFT OUTER JOIN 
  
- (SELECT SUBSTRING(Date_d, 9, 2) as Date_d, sum(price) as price, max(Division) as Division from spend where ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) GROUP by Date_d) as B 
-    ON A.Date_d = B.Date_d
+ (SELECT SUBSTRING(Date_d, 9, 2) as Date_d, sum(price) as price, max(Division) as Division 
+ from spend 
+ where ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) 
+ GROUP by Date_d) as B 
+ ON A.Date_d = B.Date_d
     
 UNION    
 
 SELECT IFNULL(A.Date_d, B.Date_d), A.price, A.Division, B.price, B.Division
   From
-(SELECT SUBSTRING(Date_d, 9, 2) as Date_d, sum(price) as price, max(Division) as Division from spend where ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) GROUP by Date_d) as B  
+(SELECT SUBSTRING(Date_d, 9, 2) as Date_d, sum(price) as price, max(Division) as Division 
+from spend 
+where ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) 
+GROUP by Date_d) as B  
     
     LEFT OUTER JOIN 
  
- (SELECT MAX(Date_d) Date_d, sum(price) as price, MAX(Division) Division from (select SUBSTRING(Date_d, 9, 2) as Date_d, sum((user.Change_income*work_income.Time)) as price, max(Division) Division from work_income,user where work_income.ID = '{$_SESSION["ses_username"]}' and user.ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) GROUP BY Date_d UNION ALL select SUBSTRING(Date_d, 9, 2) as Date_d, sum(price), max(Division) as a from income where ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) GROUP by Date_d) as basetable group by Date_d) as A  
-    ON A.Date_d = B.Date_d) as f order by Date_d asc");
+ (SELECT MAX(Date_d) Date_d, sum(price) as price, MAX(Division) Division 
+ from (select SUBSTRING(Date_d, 9, 2) as Date_d, sum((user.Change_income*work_income.Time)) as price, max(Division) Division 
+ from work_income,user 
+ where work_income.ID = '{$_SESSION["ses_username"]}' and user.ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) 
+ GROUP BY Date_d 
+
+ UNION ALL 
+
+ select SUBSTRING(Date_d, 9, 2) as Date_d, sum(price), max(Division) as a 
+ from income 
+ where ID = '{$_SESSION["ses_username"]}' and month(Date_d) = Month(now()) 
+ GROUP by Date_d) as basetable group by Date_d) as A  
+    ON A.Date_d = B.Date_d) as f 
+    order by Date_d asc");
            //이번달에 속하는 일, 금액, 구분    
 /*
 sql 설명 
