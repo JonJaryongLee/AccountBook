@@ -5,11 +5,11 @@
                 <br>
                 <div class="title">당신의 소비유형은?</div>
                 <br>
-                <img height="40%" src="pigIMG.png" alt="pid">
+                <img height="40%" :src="image" alt="pid">
                 <br>
                 <br>
-                <div class="font-weight-bold">저축형</div>
-                <div class="caption">불필요한 소비를 줄이고 합리적인 저축!</div>
+                <div class="font-weight-bold">{{type}}</div>
+                <div class="caption">{{describe}}</div>
             </div>
             <div id="btnContainerInUserSpendType">
                 <v-btn @click="goMain">뒤로가기</v-btn>
@@ -31,7 +31,10 @@ export default {
     created(){
         axios.get('/php/getUserType.php')
                 .then(response => {
-                    console.log(response.data);
+                    this.describe = response.data.describe;
+                    this.type = response.data.type;
+                    this.image = response.data.image;
+                    this.show = true;
                 })
                 .catch(error => {
                     if (error)
