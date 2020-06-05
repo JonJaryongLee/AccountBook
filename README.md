@@ -133,3 +133,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 5월 25일 - 
 #### 클라이언트 최종보고 1차작성완료 
+
+### 6월 5일 금요일
+#### 클라이언트 마지막 사진작업
