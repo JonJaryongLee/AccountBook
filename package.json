@@ -14,7 +14,7 @@
     "fusioncharts": "^3.15.1-sr.1",
     "vue": "^2.6.11",
     "vue-fusioncharts": "^3.0.4",
-    "vuetify": "^2.2.11"
+    "vuetify": "^2.6.10"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.2.0",
